@@ -1,0 +1,15 @@
+:project:
+  :which_ceedling: /home/user/Ceedling
+  :use_mocks: TRUE
+  :use_test_preprocessor: :tests
+  :build_root: build
+:paths:
+  :test:
+    - test/**
+  :source:
+    - src/**
+  :include:
+    - .
+:cmock:
+  :mock_prefix: mock_
+  :treat_inlines: :include

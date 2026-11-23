@@ -1,0 +1,316 @@
+[
+  {
+    "id": "GAP3-01",
+    "kind": "mechanism",
+    "title": "The gcc:15 image is GCC 15.3.0 and defaults to C23",
+    "claim": "The official Docker Hub image gcc:15 (digest sha256:60a0af4b79226d7cb062cc18dcb56f91b4385aace8f6d514f114c3f1af363ef1, Debian 13) provides GCC 15.3.0. Its default dialect reports __STDC_VERSION__ 202311L, which is C23, and -std=c17 reports 201710L. The native compiler in this container is GCC 13.3.0, whose default reports 201710L and whose -std=c2x reports 202000L.",
+    "evidence": [
+      "phase1-gaps/gap-03/e2/results-gcc15.txt",
+      "phase1-gaps/gap-03/e2_tagged/results.txt",
+      "phase1-gaps/gap-03/run-e2-all.sh",
+      "phase1-gaps/gap-03/gcc15-image.txt"
+    ],
+    "issues": [
+      "#1463"
+    ],
+    "severity": "none",
+    "track_hint": "unknown",
+    "stream": "gap-3",
+    "verdict": {
+      "verdict": "partly",
+      "note": "Versions and __STDC_VERSION__ values confirmed from e2/results-gcc15.txt and e2_tagged/results.txt. The digest and Debian 13 were not then recorded in any log or script."
+    },
+    "status": "confirmed",
+    "ruling": {
+      "final": "confirmed",
+      "reason": "The digest and the OS are now on record. phase1-gaps/gap-03/gcc15-image.txt:2 gives RepoDigests [\"gcc@sha256:60a0af4b79226d7cb062cc18dcb56f91b4385aace8f6d514f114c3f1af363ef1\"]. The repo has no namespace, so this is the official library image. Lines 3-4 give Debian GNU/Linux 13 (trixie), VERSION_ID 13, and line 5 gives gcc (GCC) 15.3.0. The dialect values match the claim. In e2/results-gcc15.txt, GCC 15 default is 202311L (:3), -std=c17 is 201710L (:31) and -std=c23 is 202311L (:59). GCC 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) default is 201710L (:87) and -std=c2x is 202000L (:115). e2_tagged/results.txt:3,34,141,217 shows the same values. run-e2-all.sh:8-13 shows that the GCC 15 runs used docker image gcc:15 and the GCC 13 runs used the native gcc."
+    }
+  },
+  {
+    "id": "GAP3-02",
+    "kind": "mechanism",
+    "title": "GCC 15 rejects e2's untagged redefinition under every standard",
+    "claim": "Experiment e2, unchanged except for gcc in place of clang, rejects t_now.c on GCC 15.3.0 under its default C23, under -std=c17 and under -std=c23, with redeclaration of enumerator 'B_OK' and 'B_FAIL' and conflicting types for 'b_status_E'. t_flagged.c compiles under all three. GCC 13.3.0 gives the same results under its default and -std=c2x. This observes the untagged half of the earlier GAP3-12's inference.",
+    "evidence": [
+      "phase1-gaps/gap-03/e2/results-gcc15.txt",
+      "phase1-gaps/gap-03/e2/run-gcc.sh",
+      "phase1-gaps/gap-03/e2/gen/types_now.h",
+      "phase1-gaps/gap-03/e2/gen/types_flagged.h"
+    ],
+    "issues": [
+      "#1463"
+    ],
+    "severity": "none",
+    "track_hint": "A",
+    "stream": "gap-3",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "e2/results-gcc15.txt shows the three errors for t_now.c and flagged-ok for t_flagged.c under GCC 15 default, -std=c17 and -std=c23, and the same on GCC 13 default and -std=c2x."
+    },
+    "status": "confirmed",
+    "ruling": null
+  },
+  {
+    "id": "GAP3-03",
+    "kind": "mechanism",
+    "title": "GCC 15's C23 accepts an identical tagged enum or struct redefinition",
+    "claim": "In the tagged variant of e2, where src/b/b.h and the generated header both define typedef enum b_status_e { B_OK, B_FAIL } or typedef struct b_cfg_s { int x; } identically, t_tag_enum.c and t_tag_struct.c compile on GCC 15.3.0 under its default and under -std=c23. Both are rejected on GCC 15.3.0 under -std=c17, and on GCC 13.3.0 under its default and under -std=c2x. A tagged enum whose second definition adds an enumerator, and an identical untagged struct, are rejected in all five runs.",
+    "evidence": [
+      "phase1-gaps/gap-03/e2_tagged/results.txt",
+      "phase1-gaps/gap-03/e2_tagged/run-gcc.sh",
+      "phase1-gaps/gap-03/e2_tagged/src/b/b.h",
+      "phase1-gaps/gap-03/e2_tagged/gen/types_enum.h",
+      "phase1-gaps/gap-03/e2_tagged/gen/types_struct.h"
+    ],
+    "issues": [
+      "#1463"
+    ],
+    "severity": "none",
+    "track_hint": "A",
+    "stream": "gap-3",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "e2_tagged/results.txt RESULT lines match the claim in all five runs."
+    },
+    "status": "confirmed",
+    "ruling": null
+  },
+  {
+    "id": "GAP3-04",
+    "kind": "defect",
+    "title": "A real Ceedling build reproduces #1463 with an untagged type on GCC 15 and 13",
+    "claim": "The #1463 project with the untagged typedef enum { B_OK, B_FAIL } b_status_E stops compiling test/test_a.c on GCC 15.3.0 and on GCC 13.3.0. Both report redeclaration of enumerator 'B_OK' at ceedling_partial_b_types.h:6:16, with the previous definition at ./src/b/b.h:3:16 reached from src/a/helper.h:3 through ceedling_partial_a_impl.h:8. The generated types header defines B_H and the enum with no condition, because generate_types calls preamble with no flag.",
+    "evidence": [
+      "phase1-gaps/gap-03/results/p1463-untagged-gcc15.txt",
+      "phase1-gaps/gap-03/results/p1463-untagged-gcc13.txt",
+      "lib/ceedling/generators/generator_partials.rb:123-131",
+      "lib/ceedling/generators/partial_header_writer.rb:41-45"
+    ],
+    "issues": [
+      "#1463"
+    ],
+    "severity": "high",
+    "track_hint": "A",
+    "stream": "gap-3",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "Both logs show the error at ceedling_partial_b_types.h:6:16 and the trace through src/a/helper.h:3 and ceedling_partial_a_impl.h:8. generator_partials.rb:129 calls preamble with no flag. The log also shows a b_do conflicting-types error the claim does not mention."
+    },
+    "status": "confirmed",
+    "ruling": null
+  },
+  {
+    "id": "GAP3-05",
+    "kind": "defect",
+    "title": "GCC 15's default hides #1463 when the module's types are tagged",
+    "claim": "With b.h defining typedef enum b_status_e { B_OK, B_FAIL } b_status_E and typedef struct b_cfg_s { int gain; } b_cfg_S, the #1463 project builds and its one test passes on GCC 15.3.0 under its default C23. The .d files of test_a.c, ceedling_partial_a_impl.c and test_a_runner.c each list both src/b/b.h and ceedling_partial_b_types.h, so each of those translation units holds both definitions. The same project stops at test_a.c on GCC 13.3.0, and on GCC 15.3.0 with -std=c17 added to the test compile flags, reporting redeclaration of 'enum b_status_e' and redefinition of 'struct b_cfg_s'.",
+    "evidence": [
+      "phase1-gaps/gap-03/results/p1463-tagged-gcc15.txt",
+      "phase1-gaps/gap-03/results/p1463-tagged-gcc13.txt",
+      "phase1-gaps/gap-03/results/p1463-tagged_c17-gcc15.txt",
+      "phase1-gaps/gap-03/p1463/tagged/src/b/b.h",
+      "lib/ceedling/generators/generator_partials.rb:123-131"
+    ],
+    "issues": [
+      "#1463"
+    ],
+    "severity": "high",
+    "track_hint": "A",
+    "stream": "gap-3",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "p1463-tagged-gcc15.txt shows PASSED 1 and the three .d files listing both headers. The GCC 13 and -std=c17 logs show the tagged redeclaration errors."
+    },
+    "status": "confirmed",
+    "ruling": null
+  },
+  {
+    "id": "GAP3-06",
+    "kind": "test",
+    "title": "A #1463 contract row must use an untagged type or pin a pre-C23 standard",
+    "claim": "Across the runs so far, a #1463 contract row failed on every compiler tried whenever b.h's type is untagged, or the project compiles at C17. The untagged enum fails on GCC 13.3.0 (default C17 and -std=c2x), on GCC 15.3.0 (default C23, -std=c17 and -std=c23), and on clang in stream 4's e2 run. That run used the compiler's default dialect and printed no version; e2/run.sh's comment names Apple clang 15. Clang was run only on the untagged case. An untagged struct also fails on GCC 13 and GCC 15 in every dialect tried. An identical tagged enum or struct is rejected by GCC 13.3.0 in both dialects and by GCC 15.3.0 under -std=c17. It is accepted by GCC 15.3.0 at its default C23 and under -std=c23. A tagged enum whose enumerators differ is still rejected. The same holds in Ceedling. The tagged project passes on GCC 15's default even though the generated ceedling_partial_b_types.h repeats b.h's types and test_a.d lists both headers. A row written with a tagged type would therefore pass on GCC 15's default dialect while the defect remains. No dialect earlier than C17 was run.",
+    "evidence": [
+      "phase1-gaps/gap-03/e2/results.txt",
+      "phase1-gaps/gap-03/e2/results-gcc15.txt",
+      "phase1-gaps/gap-03/e2_tagged/results.txt",
+      "phase1-gaps/gap-03/results/p1463-untagged-gcc15.txt",
+      "phase1-gaps/gap-03/results/p1463-tagged-gcc15.txt",
+      "phase1-gaps/gap-03/results/p1463-tagged_c17-gcc15.txt",
+      "phase1-gaps/gap-03/e2/run.sh"
+    ],
+    "issues": [
+      "#1463"
+    ],
+    "severity": "none",
+    "track_hint": "A",
+    "stream": "gap-3",
+    "verdict": {
+      "verdict": "partly",
+      "note": "GCC parts confirmed. The clang 15 version is not printed in e2/results.txt, clang was run on the untagged case only, and 'or earlier' goes beyond the C17 run."
+    },
+    "status": "revised",
+    "ruling": {
+      "final": "revised",
+      "reason": "The GCC parts hold. Untagged enum: e2/results-gcc15.txt shows errors at :6/:20 (GCC 15 default), :34/:48 (c17), :62/:76 (c23), :90/:104 (GCC 13 default) and :118/:132 (GCC 13 c2x). Ceedling untagged runs fail with exit status 1 in results/p1463-untagged-gcc15.txt and p1463-untagged-gcc13.txt (log line 349). Tagged on GCC 15: e2_tagged/results.txt:5,7 (default) and :112,114 (c23) say compiles; :57,74 (c17) say rejected. Tagged on GCC 13: rejected in both dialects (:164,181,240,257). t_tag_enum_differs is rejected in every run (:21,97,128,204,280), and t_untag_struct likewise (:31,107,138,214,290). In Ceedling, results/p1463-tagged-gcc15.txt reports PASSED 1 and exit status 0 at log lines 362/368. Its generated ceedling_partial_b_types.h redefines both tagged types, and test_a.d lists src/b/b.h and ceedling_partial_b_types.h together, so the duplication is still there. p1463-tagged_c17-gcc15.txt adds -std=c17 (log line 303) and fails with exit status 1 (log line 357). The clang part needs narrowing. e2/results.txt:3,10,17 holds clang-style errors but prints no version string. The only record of the version is the comment at e2/run.sh:2 ('Apple clang 15'). No tagged case was run on clang (run.sh:4-5 compiles only t_now.c and t_flagged.c). 'Or earlier' goes beyond the evidence, since only C17 (201710L) was tested. The original also left out that GCC 13 -std=c2x rejects tagged types."
+    },
+    "original_claim": "A #1463 contract row fails on every compiler run so far only if b.h's type is untagged or the contract project compiles with -std=c17 or earlier. The untagged enum fails on GCC 13.3.0, on GCC 15.3.0 under C17 and C23, and on clang 15 as stream 4 recorded. An identical tagged enum or struct passes on GCC 15.3.0's default. A row written with a tagged type would therefore pass on GCC 15 while the defect remains."
+  },
+  {
+    "id": "GAP3-07",
+    "kind": "spelling",
+    "title": "Through search path '.', a mock's source is spelled './src/...'",
+    "claim": "With :paths: :include: [.] and the test including \"src/drivers/mock_foo.h\", the mock's source is ./src/drivers/foo.h. The source-isolation NOTICE, which prints the source of the mock it matched, names './src/drivers/foo.h' on GCC 13.3.0 and GCC 15.3.0. It does the same with :include: [., src/drivers]. With :include: [src/drivers] and \"mock_foo.h\" the same NOTICE names 'src/drivers/foo.h'.",
+    "evidence": [
+      "phase1-gaps/gap-03/results/dc032-dot-gcc13.txt",
+      "phase1-gaps/gap-03/results/dc032-dot-gcc15.txt",
+      "phase1-gaps/gap-03/results/dc032-dot_drivers-gcc15.txt",
+      "phase1-gaps/gap-03/results/dc032-control-gcc15.txt",
+      "lib/ceedling/test_invoker/test_build_executor.rb:894-899",
+      "lib/ceedling/test_invoker/test_build_executor.rb:940-942",
+      "lib/ceedling/test_invoker/test_build_planner.rb:68",
+      "lib/ceedling/test_invoker/test_build_planner.rb:88"
+    ],
+    "issues": [
+      "#1414"
+    ],
+    "severity": "none",
+    "track_hint": "A",
+    "stream": "gap-3",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "The NOTICE at test_build_executor.rb:940-942 prints details.source. It reads './src/drivers/foo.h' in the dot and dot_drivers logs and 'src/drivers/foo.h' in control."
+    },
+    "status": "confirmed",
+    "ruling": null
+  },
+  {
+    "id": "GAP3-08",
+    "kind": "spelling",
+    "title": "GCC 13 and 15 write 'src/...' in the .d and './src/...' in line markers",
+    "claim": "In both builds (dot, with :include: [.], and dot_drivers, with :include: [., src/drivers]), GCC 13.3.0 and GCC 15.3.0 write src/drivers/helper.h and src/drivers/foo.h without './' in test_helper.d. The line markers in the preprocessed test file differ between the builds. In dot, they read \"./src/drivers/helper.h\" and \"./src/drivers/foo.h\", because the test includes \"src/drivers/helper.h\", which is found through -I \".\". In dot_drivers, they read \"src/drivers/helper.h\" and \"src/drivers/foo.h\" without './' on both compilers, because the test includes \"helper.h\", which is found through -I src/drivers. Ceedling's GCC dependency parser keeps each token as written. It splits tokens, unescapes only '\\ ' and '\\#', and removes duplicates. It does no path normalization, so it would not add or strip './'.",
+    "evidence": [
+      "phase1-gaps/gap-03/results/dc032-dot-gcc13.txt",
+      "phase1-gaps/gap-03/results/dc032-dot-gcc15.txt",
+      "phase1-gaps/gap-03/results/dc032-dot_drivers-gcc15.txt",
+      "lib/ceedling/dependencies/gcc_dependency_parser.rb:43-63",
+      "phase1-gaps/gap-03/results/dc032-dot_drivers-gcc13.txt"
+    ],
+    "issues": [
+      "#1414"
+    ],
+    "severity": "none",
+    "track_hint": "A",
+    "stream": "gap-3",
+    "verdict": {
+      "verdict": "partly",
+      "note": "The .d spelling and the parser behavior are right. The './' line markers hold only in the dot builds. In dot_drivers the markers read src/drivers/... because the test includes \"helper.h\" through -I src/drivers."
+    },
+    "status": "revised",
+    "ruling": {
+      "final": "revised",
+      "reason": "The .d spelling is the same in all four logs: results/dc032-dot-gcc13.txt:33, dc032-dot-gcc15.txt:33, dc032-dot_drivers-gcc13.txt:33 and dc032-dot_drivers-gcc15.txt:33 each read 'src/drivers/helper.h src/drivers/foo.h'. The line markers differ. dc032-dot-gcc13.txt:60-62 and dc032-dot-gcc15.txt:60-62 read \"./src/drivers/...\", while dc032-dot_drivers-gcc13.txt:60-62 and dc032-dot_drivers-gcc15.txt:60-62 read \"src/drivers/...\". The test sources explain the difference: dc032/dot/test/test_helper.c includes \"src/drivers/helper.h\", and dc032/dot_drivers/test/test_helper.c includes \"helper.h\". In the parser, lib/ceedling/dependencies/gcc_dependency_parser.rb:43-63 tokenizes and concatenates. tokenize (:72-75) applies unescape (:82-84), which rewrites only '\\ ' and '\\#', and :62 removes duplicates. There is no path normalization, so 'as written' holds apart from those escapes."
+    },
+    "original_claim": "In the same builds, GCC 13.3.0 and GCC 15.3.0 write src/drivers/helper.h and src/drivers/foo.h without './' in test_helper.d, while the line markers in the preprocessed test file read \"./src/drivers/helper.h\" and \"./src/drivers/foo.h\". Ceedling's dependency parser keeps each token as written."
+  },
+  {
+    "id": "GAP3-09",
+    "kind": "defect",
+    "title": "Sibling isolation does nothing for a mocked header reached through '.'",
+    "claim": "isolate_sibling_headers never isolates src/drivers/helper.h when the mock's source is ./src/drivers/foo.h. No 'Isolated' NOTICE appears in eight builds, the dot, dot_drivers, dot_helperfirst and dot_drivers_helperfirst projects on GCC 13.3.0 and GCC 15.3.0. The check at test_build_executor.rb:1075 skips the header because the .d spells it src/drivers/foo.h. With :include: [src/drivers] the same tree logs \"Isolated 'src/drivers/helper.h'\" and recompiles the test with the isolation directory first on both compilers.",
+    "evidence": [
+      "phase1-gaps/gap-03/results/dc032-dot-gcc15.txt",
+      "phase1-gaps/gap-03/results/dc032-dot_drivers-gcc13.txt",
+      "phase1-gaps/gap-03/results/dc032-dot_helperfirst-gcc15.txt",
+      "phase1-gaps/gap-03/results/dc032-control-gcc13.txt",
+      "phase1-gaps/gap-03/results/dc032-control-gcc15.txt",
+      "lib/ceedling/test_invoker/test_build_executor.rb:1064-1075",
+      "lib/ceedling/test_invoker/test_substitutions.rb:30-35",
+      "lib/ceedling/test_invoker/test_substitutions.rb:59-62"
+    ],
+    "issues": [
+
+    ],
+    "severity": "medium",
+    "track_hint": "A",
+    "stream": "gap-3",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "No 'Isolated' NOTICE in the eight dot* logs, and present in the control logs with an isolated retry. test_build_executor.rb:1075 compares './src/drivers/foo.h' with the .d's 'src/drivers/foo.h' as strings."
+    },
+    "status": "confirmed",
+    "ruling": null
+  },
+  {
+    "id": "GAP3-10",
+    "kind": "defect",
+    "title": "The missed isolation runs the real inline body in place of the mock",
+    "claim": "When the test includes helper.h before the mock, the missed isolation makes the test call the real static inline foo_twice. test_foo_twice_is_mocked fails with 'Expected 100 Was 6' in dot_helperfirst and dot_drivers_helperfirst on GCC 13.3.0 and GCC 15.3.0. control_helperfirst, the same test under :include: [src/drivers], isolates helper.h and passes both tests on both compilers.",
+    "evidence": [
+      "phase1-gaps/gap-03/results/dc032-dot_helperfirst-gcc13.txt",
+      "phase1-gaps/gap-03/results/dc032-dot_helperfirst-gcc15.txt",
+      "phase1-gaps/gap-03/results/dc032-dot_drivers_helperfirst-gcc15.txt",
+      "phase1-gaps/gap-03/results/dc032-control_helperfirst-gcc15.txt",
+      "phase1-gaps/gap-03/dc032/dot_helperfirst/test/test_helper.c"
+    ],
+    "issues": [
+
+    ],
+    "severity": "medium",
+    "track_hint": "A",
+    "stream": "gap-3",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "Both helperfirst dot projects fail with 'Expected 100 Was 6' on both compilers, and control_helperfirst passes 2 of 2. The real foo_twice returns 2*x."
+    },
+    "status": "confirmed",
+    "ruling": null
+  },
+  {
+    "id": "GAP3-11",
+    "kind": "mechanism",
+    "title": "Source isolation compares expanded directories and survives the './' spelling",
+    "claim": "inline_mocked_sibling_header compares File.expand_path of the source's directory with that of each mock's source, so './src/drivers' and 'src/drivers' match. Every dot build logs that it compiles an isolated copy of src/drivers/helper.c because of './src/drivers/foo.h'. Header isolation and source isolation thus compare the same mock source two different ways.",
+    "evidence": [
+      "lib/ceedling/test_invoker/test_build_executor.rb:887-903",
+      "lib/ceedling/test_invoker/test_build_executor.rb:1075",
+      "phase1-gaps/gap-03/results/dc032-dot-gcc15.txt",
+      "phase1-gaps/gap-03/results/dc032-dot_drivers-gcc13.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "A",
+    "stream": "gap-3",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "test_build_executor.rb:892-896 compares File.expand_path of both directories, while :1075 uses a raw include? match. The helper.c NOTICE appears in every dot build."
+    },
+    "status": "confirmed",
+    "ruling": null
+  },
+  {
+    "id": "GAP3-12",
+    "kind": "test",
+    "title": "DC-032's second contract row passes today unless helper.h comes first",
+    "claim": "DC-032's second contract row as written, with the test including \"src/drivers/mock_foo.h\" before \"helper.h\" under :include: [., src/drivers], builds and passes on GCC 13.3.0 and GCC 15.3.0 although helper.h is not isolated. CMock's copy of foo.h carries the real header's guard FOO_H and the .d lists it ahead of src/drivers/helper.h, so the real foo.h adds nothing. With helper.h included first and a test of the inline function's mock, the row fails today with 'Expected 100 Was 6'.",
+    "evidence": [
+      "phase1-gaps/gap-03/results/dc032-dot_drivers-gcc13.txt",
+      "phase1-gaps/gap-03/results/dc032-dot_drivers-gcc15.txt",
+      "phase1-gaps/gap-03/results/dc032-dot_drivers_helperfirst-gcc15.txt",
+      "phase1-gaps/gap-03/dc032/dot_drivers/src/drivers/foo.h"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "A",
+    "stream": "gap-3",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "dot_drivers passes with no isolation. CMock's copy carries FOO_H and the .d lists it before helper.h. dot_drivers_helperfirst fails with 'Expected 100 Was 6'."
+    },
+    "status": "confirmed",
+    "ruling": null
+  }
+]

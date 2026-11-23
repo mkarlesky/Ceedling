@@ -1,0 +1,26 @@
++ clang -fsyntax-only -I . t_now.c
+In file included from t_now.c:2:
+./gen/types_now.h:4:16: error: redefinition of enumerator 'B_OK'
+typedef enum { B_OK, B_FAIL } b_status_E;
+               ^
+./src/b/b.h:3:16: note: previous definition is here
+typedef enum { B_OK, B_FAIL } b_status_E;
+               ^
+In file included from t_now.c:2:
+./gen/types_now.h:4:22: error: redefinition of enumerator 'B_FAIL'
+typedef enum { B_OK, B_FAIL } b_status_E;
+                     ^
+./src/b/b.h:3:22: note: previous definition is here
+typedef enum { B_OK, B_FAIL } b_status_E;
+                     ^
+In file included from t_now.c:2:
+./gen/types_now.h:4:31: error: typedef redefinition with different types ('enum b_status_E' vs 'enum b_status_E')
+typedef enum { B_OK, B_FAIL } b_status_E;
+                              ^
+./src/b/b.h:3:31: note: previous definition is here
+typedef enum { B_OK, B_FAIL } b_status_E;
+                              ^
+3 errors generated.
++ clang -fsyntax-only -I . t_flagged.c
++ echo flagged-ok
+flagged-ok

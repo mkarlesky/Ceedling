@@ -1,0 +1,102 @@
+# Trimmed from the full --verbosity=obnoxious log of work/p1463-untagged-gcc15.log (349 lines).
+# Kept: the run header, Ceedling's launch lines, step headings, NOTICEs, compiler errors,
+# the test file's compile command, test results and the exit status. Line numbers are the full log's.
+1:### project p1463/untagged, compiler gcc15: gcc (GCC) 15.3.0
+2:### default C standard: #define __STDC_VERSION__ 202311L
+6: > Set which Ceedling from config :project ↳ :which_ceedling => /home/user/Ceedling
+7: > Launching Ceedling from /home/user/Ceedling/
+39:ℹ️ NOTICE: Enabled :test_runner ↳ :cmdline_args because :project ↳ :use_backtrace is enabled.
+92:Preprocessing test files for follow-on details extraction steps test_a.c...
+116:Preprocessing partial header for test/test_a::a.h...
+121:Preprocessing header file for follow-on Partials handling test/test_a::a.h...
+138:Preprocessing partial header for test/test_a::b.h...
+143:Preprocessing header file for follow-on Partials handling test/test_a::b.h...
+165:Preprocessing partial source for test/test_a::a.c...
+170:Preprocessing source file for follow-on Partials handling test/test_a::a.c...
+231:Generating Partial implementation for test/test_a::a...
+255:Generating shared Partial types for test/test_a::b...
+259:Generating Partial mockable interface for test/test_a::b...
+262:Preprocessing for Mocks: no mocks need preprocessing
+266:Generating mock for test/test_a::ceedling_partial_b_interface.h...
+272:Preprocessing test file test_a.c...
+289:Generating runner for test_a.c...
+299:Compiling test_a.c...
+301:`gcc -I"build/test/mocks/test/test_a/_t_" -I"build/test/partials/test/test_a/_t_" -I"." -I"src" -I"src/a" -I"src/b" -I"build/vendor/unity/src" -I"build/vendor/cmock/src" -I"build/vendor/ceedling" -D"CMOCK_MOCK_PREFIX=mock_" -D"CEEDLING_PARTIALS_PREFIX=ceedling_partial_" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "test/test_a.c" -o "build/test/out/test/test_a/_t_/test/test_a.o" -MMD -MF "build/test/dependencies/test/test_a/_t_/test/test_a.d"`
+304:ℹ️ NOTICE: The compiler output appears to report a redeclaration or conflicting types in 'b.h'. If so, this test's Partial of 'b.h' may be colliding with its real content ('src/b/b.h'), which can reach this compilation through a second #include chain that bypasses the Partial.
+316:🧨 EXCEPTION: 'Default Test Compiler' (gcc) terminated with exit code [1] and output ⏩️
+317:In file included from build/test/partials/test/test_a/_t_/ceedling_partial_b_interface.h:6,
+318:                 from build/test/mocks/test/test_a/_t_/mock_ceedling_partial_b_interface.h:6,
+319:                 from test/test_a.c:6:
+320:build/test/partials/test/test_a/_t_/ceedling_partial_b_types.h:6:16: error: redeclaration of enumerator 'B_OK'
+323:In file included from src/a/helper.h:3,
+324:                 from build/test/partials/test/test_a/_t_/ceedling_partial_a_impl.h:8,
+325:                 from test/test_a.c:4:
+326:./src/b/b.h:3:16: note: previous definition of 'B_OK' with type 'enum <anonymous>'
+329:build/test/partials/test/test_a/_t_/ceedling_partial_b_types.h:6:22: error: redeclaration of enumerator 'B_FAIL'
+332:./src/b/b.h:3:22: note: previous definition of 'B_FAIL' with type 'enum <anonymous>'
+335:build/test/partials/test/test_a/_t_/ceedling_partial_b_types.h:6:31: error: conflicting types for 'b_status_E'; have 'enum <anonymous>'
+338:./src/b/b.h:3:31: note: previous declaration of 'b_status_E' with type 'b_status_E'
+341:build/test/partials/test/test_a/_t_/ceedling_partial_b_interface.h:8:12: error: conflicting types for 'b_do'; have 'b_status_E(int)'
+344:./src/b/b.h:4:12: note: previous declaration of 'b_do' with type 'b_status_E(int)'
+347:Executed Command: gcc -I"build/test/mocks/test/test_a/_t_" -I"build/test/partials/test/test_a/_t_" -I"." -I"src" -I"src/a" -I"src/b" -I"build/vendor/unity/src" -I"build/vendor/cmock/src" -I"build/vendor/ceedling" -D"CMOCK_MOCK_PREFIX=mock_" -D"CEEDLING_PARTIALS_PREFIX=ceedling_partial_" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "test/test_a.c" -o "build/test/out/test/test_a/_t_/test/test_a.o" -MMD -MF "build/test/dependencies/test/test_a/_t_/test/test_a.d"
+349:### ceedling exit status 1
+
+# ---- generated file build/test/dependencies/test/test_a/_t_/test/test_a.d
+build/test/out/test/test_a/_t_/test/test_a.o: test/test_a.c \
+ build/vendor/unity/src/unity.h build/vendor/unity/src/unity_internals.h \
+ build/vendor/ceedling/ceedling.h \
+ build/test/partials/test/test_a/_t_/ceedling_partial_a_impl.h \
+ src/a/helper.h src/b/b.h \
+ build/test/mocks/test/test_a/_t_/mock_ceedling_partial_b_interface.h \
+ build/test/partials/test/test_a/_t_/ceedling_partial_b_interface.h \
+ build/test/partials/test/test_a/_t_/ceedling_partial_b_types.h
+
+# ---- generated file build/test/partials/test/test_a/_t_/ceedling_partial_b_types.h
+#ifndef GENA71DBAD3_CEEDLING_PARTIAL_B_TYPES_H_CEEDLING
+#define GENA71DBAD3_CEEDLING_PARTIAL_B_TYPES_H_CEEDLING
+
+#define B_H
+
+typedef enum { B_OK, B_FAIL } b_status_E;
+
+#endif // GENA71DBAD3_CEEDLING_PARTIAL_B_TYPES_H_CEEDLING
+
+
+# ---- generated file build/test/partials/test/test_a/_t_/ceedling_partial_b_interface.h
+#ifndef GEN0949C656_CEEDLING_PARTIAL_B_INTERFACE_H_CEEDLING
+#define GEN0949C656_CEEDLING_PARTIAL_B_INTERFACE_H_CEEDLING
+
+#define B_H
+
+#include "ceedling_partial_b_types.h"
+
+b_status_E b_do(int x);
+
+#endif // GEN0949C656_CEEDLING_PARTIAL_B_INTERFACE_H_CEEDLING
+
+
+# ---- generated file build/test/partials/test/test_a/_t_/ceedling_partial_a_impl.h
+#ifndef GEN1F866B1B_CEEDLING_PARTIAL_A_IMPL_H_CEEDLING
+#define GEN1F866B1B_CEEDLING_PARTIAL_A_IMPL_H_CEEDLING
+
+#define A_H
+
+int a_run(int x);
+
+#include "helper.h"
+
+#endif // GEN1F866B1B_CEEDLING_PARTIAL_A_IMPL_H_CEEDLING
+
+
+# ---- generated file build/test/partials/test/test_a/_t_/ceedling_partial_a_impl.c
+// Ceedling generated file
+#include "ceedling_partial_a_impl.h"
+#include "helper.h"
+#include "ceedling_partial_b_interface.h"
+
+#line 5 "src/a/a.c"
+int a_run(int x)
+{
+  return (b_do(x) == B_OK) ? 1 : 0;
+}
+

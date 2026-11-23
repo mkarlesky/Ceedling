@@ -1,0 +1,290 @@
+===== GCC 15 (docker gcc:15) e2_tagged default
+gcc (GCC) 15.3.0
+#define __STDC_VERSION__ 202311L
++ gcc  -fsyntax-only -I . t_tag_enum.c
+RESULT t_tag_enum: compiles
++ gcc  -fsyntax-only -I . t_tag_struct.c
+RESULT t_tag_struct: compiles
++ gcc  -fsyntax-only -I . t_tag_enum_differs.c
+In file included from t_tag_enum_differs.c:2:
+gen/types_enum_differs.h:4:41: error: conflicting redefinition of enum 'enum b_status_e'
+    4 | typedef enum b_status_e { B_OK, B_FAIL, B_EXTRA } b_status_E;
+      |                                         ^~~~~~~
+gen/types_enum_differs.h:4:51: error: conflicting types for 'b_status_E'; have 'enum b_status_e'
+    4 | typedef enum b_status_e { B_OK, B_FAIL, B_EXTRA } b_status_E;
+      |                                                   ^~~~~~~~~~
+In file included from src/a/helper.h:1,
+                 from t_tag_enum_differs.c:1:
+./src/b/b.h:3:42: note: previous declaration of 'b_status_E' with type 'b_status_E' {aka 'enum b_status_e'}
+    3 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |                                          ^~~~~~~~~~
+RESULT t_tag_enum_differs: rejected
++ gcc  -fsyntax-only -I . t_untag_struct.c
+In file included from t_untag_struct.c:2:
+gen/types_ustruct.h:4:27: error: conflicting types for 'u_cfg_S'; have 'struct <anonymous>'
+    4 | typedef struct { int x; } u_cfg_S;
+      |                           ^~~~~~~
+In file included from t_untag_struct.c:1:
+src/u/u.h:3:27: note: previous declaration of 'u_cfg_S' with type 'u_cfg_S'
+    3 | typedef struct { int x; } u_cfg_S;
+      |                           ^~~~~~~
+RESULT t_untag_struct: rejected
+===== GCC 15 (docker gcc:15) e2_tagged -std=c17
+gcc (GCC) 15.3.0
+#define __STDC_VERSION__ 201710L
++ gcc -std=c17 -fsyntax-only -I . t_tag_enum.c
+In file included from t_tag_enum.c:2:
+gen/types_enum.h:4:14: error: redeclaration of 'enum b_status_e'
+    4 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |              ^~~~~~~~~~
+In file included from src/a/helper.h:1,
+                 from t_tag_enum.c:1:
+./src/b/b.h:3:14: note: originally defined here
+    3 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |              ^~~~~~~~~~
+gen/types_enum.h:4:27: error: redeclaration of enumerator 'B_OK'
+    4 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |                           ^~~~
+./src/b/b.h:3:27: note: previous definition of 'B_OK' with type 'enum b_status_e'
+    3 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |                           ^~~~
+gen/types_enum.h:4:33: error: redeclaration of enumerator 'B_FAIL'
+    4 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |                                 ^~~~~~
+./src/b/b.h:3:33: note: previous definition of 'B_FAIL' with type 'enum b_status_e'
+    3 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |                                 ^~~~~~
+RESULT t_tag_enum: rejected
++ gcc -std=c17 -fsyntax-only -I . t_tag_struct.c
+In file included from t_tag_struct.c:2:
+gen/types_struct.h:4:16: error: redefinition of 'struct b_cfg_s'
+    4 | typedef struct b_cfg_s { int x; } b_cfg_S;
+      |                ^~~~~~~
+In file included from src/a/helper.h:1,
+                 from t_tag_struct.c:1:
+./src/b/b.h:4:16: note: originally defined here
+    4 | typedef struct b_cfg_s { int x; } b_cfg_S;
+      |                ^~~~~~~
+gen/types_struct.h:4:35: error: conflicting types for 'b_cfg_S'; have 'struct b_cfg_s'
+    4 | typedef struct b_cfg_s { int x; } b_cfg_S;
+      |                                   ^~~~~~~
+./src/b/b.h:4:35: note: previous declaration of 'b_cfg_S' with type 'b_cfg_S' {aka 'struct b_cfg_s'}
+    4 | typedef struct b_cfg_s { int x; } b_cfg_S;
+      |                                   ^~~~~~~
+RESULT t_tag_struct: rejected
++ gcc -std=c17 -fsyntax-only -I . t_tag_enum_differs.c
+In file included from t_tag_enum_differs.c:2:
+gen/types_enum_differs.h:4:14: error: redeclaration of 'enum b_status_e'
+    4 | typedef enum b_status_e { B_OK, B_FAIL, B_EXTRA } b_status_E;
+      |              ^~~~~~~~~~
+In file included from src/a/helper.h:1,
+                 from t_tag_enum_differs.c:1:
+./src/b/b.h:3:14: note: originally defined here
+    3 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |              ^~~~~~~~~~
+gen/types_enum_differs.h:4:27: error: redeclaration of enumerator 'B_OK'
+    4 | typedef enum b_status_e { B_OK, B_FAIL, B_EXTRA } b_status_E;
+      |                           ^~~~
+./src/b/b.h:3:27: note: previous definition of 'B_OK' with type 'enum b_status_e'
+    3 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |                           ^~~~
+gen/types_enum_differs.h:4:33: error: redeclaration of enumerator 'B_FAIL'
+    4 | typedef enum b_status_e { B_OK, B_FAIL, B_EXTRA } b_status_E;
+      |                                 ^~~~~~
+./src/b/b.h:3:33: note: previous definition of 'B_FAIL' with type 'enum b_status_e'
+    3 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |                                 ^~~~~~
+RESULT t_tag_enum_differs: rejected
++ gcc -std=c17 -fsyntax-only -I . t_untag_struct.c
+In file included from t_untag_struct.c:2:
+gen/types_ustruct.h:4:27: error: conflicting types for 'u_cfg_S'; have 'struct <anonymous>'
+    4 | typedef struct { int x; } u_cfg_S;
+      |                           ^~~~~~~
+In file included from t_untag_struct.c:1:
+src/u/u.h:3:27: note: previous declaration of 'u_cfg_S' with type 'u_cfg_S'
+    3 | typedef struct { int x; } u_cfg_S;
+      |                           ^~~~~~~
+RESULT t_untag_struct: rejected
+===== GCC 15 (docker gcc:15) e2_tagged -std=c23
+gcc (GCC) 15.3.0
+#define __STDC_VERSION__ 202311L
++ gcc -std=c23 -fsyntax-only -I . t_tag_enum.c
+RESULT t_tag_enum: compiles
++ gcc -std=c23 -fsyntax-only -I . t_tag_struct.c
+RESULT t_tag_struct: compiles
++ gcc -std=c23 -fsyntax-only -I . t_tag_enum_differs.c
+In file included from t_tag_enum_differs.c:2:
+gen/types_enum_differs.h:4:41: error: conflicting redefinition of enum 'enum b_status_e'
+    4 | typedef enum b_status_e { B_OK, B_FAIL, B_EXTRA } b_status_E;
+      |                                         ^~~~~~~
+gen/types_enum_differs.h:4:51: error: conflicting types for 'b_status_E'; have 'enum b_status_e'
+    4 | typedef enum b_status_e { B_OK, B_FAIL, B_EXTRA } b_status_E;
+      |                                                   ^~~~~~~~~~
+In file included from src/a/helper.h:1,
+                 from t_tag_enum_differs.c:1:
+./src/b/b.h:3:42: note: previous declaration of 'b_status_E' with type 'b_status_E' {aka 'enum b_status_e'}
+    3 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |                                          ^~~~~~~~~~
+RESULT t_tag_enum_differs: rejected
++ gcc -std=c23 -fsyntax-only -I . t_untag_struct.c
+In file included from t_untag_struct.c:2:
+gen/types_ustruct.h:4:27: error: conflicting types for 'u_cfg_S'; have 'struct <anonymous>'
+    4 | typedef struct { int x; } u_cfg_S;
+      |                           ^~~~~~~
+In file included from t_untag_struct.c:1:
+src/u/u.h:3:27: note: previous declaration of 'u_cfg_S' with type 'u_cfg_S'
+    3 | typedef struct { int x; } u_cfg_S;
+      |                           ^~~~~~~
+RESULT t_untag_struct: rejected
+===== GCC 13 native e2_tagged default
+gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+#define __STDC_VERSION__ 201710L
++ gcc  -fsyntax-only -I . t_tag_enum.c
+In file included from t_tag_enum.c:2:
+gen/types_enum.h:4:14: error: redeclaration of 'enum b_status_e'
+    4 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |              ^~~~~~~~~~
+In file included from src/a/helper.h:1,
+                 from t_tag_enum.c:1:
+./src/b/b.h:3:14: note: originally defined here
+    3 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |              ^~~~~~~~~~
+gen/types_enum.h:4:27: error: redeclaration of enumerator 'B_OK'
+    4 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |                           ^~~~
+./src/b/b.h:3:27: note: previous definition of 'B_OK' with type 'enum b_status_e'
+    3 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |                           ^~~~
+gen/types_enum.h:4:33: error: redeclaration of enumerator 'B_FAIL'
+    4 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |                                 ^~~~~~
+./src/b/b.h:3:33: note: previous definition of 'B_FAIL' with type 'enum b_status_e'
+    3 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |                                 ^~~~~~
+RESULT t_tag_enum: rejected
++ gcc  -fsyntax-only -I . t_tag_struct.c
+In file included from t_tag_struct.c:2:
+gen/types_struct.h:4:16: error: redefinition of 'struct b_cfg_s'
+    4 | typedef struct b_cfg_s { int x; } b_cfg_S;
+      |                ^~~~~~~
+In file included from src/a/helper.h:1,
+                 from t_tag_struct.c:1:
+./src/b/b.h:4:16: note: originally defined here
+    4 | typedef struct b_cfg_s { int x; } b_cfg_S;
+      |                ^~~~~~~
+gen/types_struct.h:4:35: error: conflicting types for 'b_cfg_S'; have 'struct b_cfg_s'
+    4 | typedef struct b_cfg_s { int x; } b_cfg_S;
+      |                                   ^~~~~~~
+./src/b/b.h:4:35: note: previous declaration of 'b_cfg_S' with type 'b_cfg_S' {aka 'struct b_cfg_s'}
+    4 | typedef struct b_cfg_s { int x; } b_cfg_S;
+      |                                   ^~~~~~~
+RESULT t_tag_struct: rejected
++ gcc  -fsyntax-only -I . t_tag_enum_differs.c
+In file included from t_tag_enum_differs.c:2:
+gen/types_enum_differs.h:4:14: error: redeclaration of 'enum b_status_e'
+    4 | typedef enum b_status_e { B_OK, B_FAIL, B_EXTRA } b_status_E;
+      |              ^~~~~~~~~~
+In file included from src/a/helper.h:1,
+                 from t_tag_enum_differs.c:1:
+./src/b/b.h:3:14: note: originally defined here
+    3 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |              ^~~~~~~~~~
+gen/types_enum_differs.h:4:27: error: redeclaration of enumerator 'B_OK'
+    4 | typedef enum b_status_e { B_OK, B_FAIL, B_EXTRA } b_status_E;
+      |                           ^~~~
+./src/b/b.h:3:27: note: previous definition of 'B_OK' with type 'enum b_status_e'
+    3 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |                           ^~~~
+gen/types_enum_differs.h:4:33: error: redeclaration of enumerator 'B_FAIL'
+    4 | typedef enum b_status_e { B_OK, B_FAIL, B_EXTRA } b_status_E;
+      |                                 ^~~~~~
+./src/b/b.h:3:33: note: previous definition of 'B_FAIL' with type 'enum b_status_e'
+    3 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |                                 ^~~~~~
+RESULT t_tag_enum_differs: rejected
++ gcc  -fsyntax-only -I . t_untag_struct.c
+In file included from t_untag_struct.c:2:
+gen/types_ustruct.h:4:27: error: conflicting types for 'u_cfg_S'; have 'struct <anonymous>'
+    4 | typedef struct { int x; } u_cfg_S;
+      |                           ^~~~~~~
+In file included from t_untag_struct.c:1:
+src/u/u.h:3:27: note: previous declaration of 'u_cfg_S' with type 'u_cfg_S'
+    3 | typedef struct { int x; } u_cfg_S;
+      |                           ^~~~~~~
+RESULT t_untag_struct: rejected
+===== GCC 13 native e2_tagged -std=c2x
+gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+#define __STDC_VERSION__ 202000L
++ gcc -std=c2x -fsyntax-only -I . t_tag_enum.c
+In file included from t_tag_enum.c:2:
+gen/types_enum.h:4:14: error: redeclaration of 'enum b_status_e'
+    4 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |              ^~~~~~~~~~
+In file included from src/a/helper.h:1,
+                 from t_tag_enum.c:1:
+./src/b/b.h:3:14: note: originally defined here
+    3 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |              ^~~~~~~~~~
+gen/types_enum.h:4:27: error: redeclaration of enumerator 'B_OK'
+    4 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |                           ^~~~
+./src/b/b.h:3:27: note: previous definition of 'B_OK' with type 'enum b_status_e'
+    3 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |                           ^~~~
+gen/types_enum.h:4:33: error: redeclaration of enumerator 'B_FAIL'
+    4 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |                                 ^~~~~~
+./src/b/b.h:3:33: note: previous definition of 'B_FAIL' with type 'enum b_status_e'
+    3 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |                                 ^~~~~~
+RESULT t_tag_enum: rejected
++ gcc -std=c2x -fsyntax-only -I . t_tag_struct.c
+In file included from t_tag_struct.c:2:
+gen/types_struct.h:4:16: error: redefinition of 'struct b_cfg_s'
+    4 | typedef struct b_cfg_s { int x; } b_cfg_S;
+      |                ^~~~~~~
+In file included from src/a/helper.h:1,
+                 from t_tag_struct.c:1:
+./src/b/b.h:4:16: note: originally defined here
+    4 | typedef struct b_cfg_s { int x; } b_cfg_S;
+      |                ^~~~~~~
+gen/types_struct.h:4:35: error: conflicting types for 'b_cfg_S'; have 'struct b_cfg_s'
+    4 | typedef struct b_cfg_s { int x; } b_cfg_S;
+      |                                   ^~~~~~~
+./src/b/b.h:4:35: note: previous declaration of 'b_cfg_S' with type 'b_cfg_S' {aka 'struct b_cfg_s'}
+    4 | typedef struct b_cfg_s { int x; } b_cfg_S;
+      |                                   ^~~~~~~
+RESULT t_tag_struct: rejected
++ gcc -std=c2x -fsyntax-only -I . t_tag_enum_differs.c
+In file included from t_tag_enum_differs.c:2:
+gen/types_enum_differs.h:4:14: error: redeclaration of 'enum b_status_e'
+    4 | typedef enum b_status_e { B_OK, B_FAIL, B_EXTRA } b_status_E;
+      |              ^~~~~~~~~~
+In file included from src/a/helper.h:1,
+                 from t_tag_enum_differs.c:1:
+./src/b/b.h:3:14: note: originally defined here
+    3 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |              ^~~~~~~~~~
+gen/types_enum_differs.h:4:27: error: redeclaration of enumerator 'B_OK'
+    4 | typedef enum b_status_e { B_OK, B_FAIL, B_EXTRA } b_status_E;
+      |                           ^~~~
+./src/b/b.h:3:27: note: previous definition of 'B_OK' with type 'enum b_status_e'
+    3 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |                           ^~~~
+gen/types_enum_differs.h:4:33: error: redeclaration of enumerator 'B_FAIL'
+    4 | typedef enum b_status_e { B_OK, B_FAIL, B_EXTRA } b_status_E;
+      |                                 ^~~~~~
+./src/b/b.h:3:33: note: previous definition of 'B_FAIL' with type 'enum b_status_e'
+    3 | typedef enum b_status_e { B_OK, B_FAIL } b_status_E;
+      |                                 ^~~~~~
+RESULT t_tag_enum_differs: rejected
++ gcc -std=c2x -fsyntax-only -I . t_untag_struct.c
+In file included from t_untag_struct.c:2:
+gen/types_ustruct.h:4:27: error: conflicting types for 'u_cfg_S'; have 'struct <anonymous>'
+    4 | typedef struct { int x; } u_cfg_S;
+      |                           ^~~~~~~
+In file included from t_untag_struct.c:1:
+src/u/u.h:3:27: note: previous declaration of 'u_cfg_S' with type 'u_cfg_S'
+    3 | typedef struct { int x; } u_cfg_S;
+      |                           ^~~~~~~
+RESULT t_untag_struct: rejected

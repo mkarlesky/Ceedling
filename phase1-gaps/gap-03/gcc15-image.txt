@@ -1,0 +1,5 @@
+# docker image inspect gcc:15 and the image's own release and compiler, recorded 2026-11-23
+RepoDigests: ["gcc@sha256:60a0af4b79226d7cb062cc18dcb56f91b4385aace8f6d514f114c3f1af363ef1"]
+PRETTY_NAME="Debian GNU/Linux 13 (trixie)"
+VERSION_ID="13"
+gcc (GCC) 15.3.0

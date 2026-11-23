@@ -1,0 +1,4 @@
+#!/bin/sh
+# Stands in for gcc on PATH so Ceedling's default tools run GCC 15.3.0 from the official gcc:15 image.
+# The checkout is mounted at the same absolute path, so every path Ceedling passes means the same file.
+exec docker run --rm -i -v /home/user/Ceedling:/home/user/Ceedling -w "$PWD" gcc:15 gcc "$@"

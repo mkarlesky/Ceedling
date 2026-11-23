@@ -1,0 +1,140 @@
+===== GCC 15 (docker gcc:15) e2 default
+gcc (GCC) 15.3.0
+#define __STDC_VERSION__ 202311L
++ gcc -fsyntax-only -I . t_now.c
+In file included from t_now.c:2:
+gen/types_now.h:4:16: error: redeclaration of enumerator 'B_OK'
+    4 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                ^~~~
+In file included from src/a/helper.h:1,
+                 from t_now.c:1:
+./src/b/b.h:3:16: note: previous definition of 'B_OK' with type 'enum <anonymous>'
+    3 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                ^~~~
+gen/types_now.h:4:22: error: redeclaration of enumerator 'B_FAIL'
+    4 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                      ^~~~~~
+./src/b/b.h:3:22: note: previous definition of 'B_FAIL' with type 'enum <anonymous>'
+    3 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                      ^~~~~~
+gen/types_now.h:4:31: error: conflicting types for 'b_status_E'; have 'enum <anonymous>'
+    4 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                               ^~~~~~~~~~
+./src/b/b.h:3:31: note: previous declaration of 'b_status_E' with type 'b_status_E'
+    3 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                               ^~~~~~~~~~
++ gcc -fsyntax-only -I . t_flagged.c
++ echo flagged-ok
+flagged-ok
+===== GCC 15 (docker gcc:15) e2 -std=c17
+gcc (GCC) 15.3.0
+#define __STDC_VERSION__ 201710L
++ gcc -std=c17 -fsyntax-only -I . t_now.c
+In file included from t_now.c:2:
+gen/types_now.h:4:16: error: redeclaration of enumerator 'B_OK'
+    4 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                ^~~~
+In file included from src/a/helper.h:1,
+                 from t_now.c:1:
+./src/b/b.h:3:16: note: previous definition of 'B_OK' with type 'enum <anonymous>'
+    3 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                ^~~~
+gen/types_now.h:4:22: error: redeclaration of enumerator 'B_FAIL'
+    4 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                      ^~~~~~
+./src/b/b.h:3:22: note: previous definition of 'B_FAIL' with type 'enum <anonymous>'
+    3 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                      ^~~~~~
+gen/types_now.h:4:31: error: conflicting types for 'b_status_E'; have 'enum <anonymous>'
+    4 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                               ^~~~~~~~~~
+./src/b/b.h:3:31: note: previous declaration of 'b_status_E' with type 'b_status_E'
+    3 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                               ^~~~~~~~~~
++ gcc -std=c17 -fsyntax-only -I . t_flagged.c
+flagged-ok
++ echo flagged-ok
+===== GCC 15 (docker gcc:15) e2 -std=c23
+gcc (GCC) 15.3.0
+#define __STDC_VERSION__ 202311L
++ gcc -std=c23 -fsyntax-only -I . t_now.c
+In file included from t_now.c:2:
+gen/types_now.h:4:16: error: redeclaration of enumerator 'B_OK'
+    4 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                ^~~~
+In file included from src/a/helper.h:1,
+                 from t_now.c:1:
+./src/b/b.h:3:16: note: previous definition of 'B_OK' with type 'enum <anonymous>'
+    3 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                ^~~~
+gen/types_now.h:4:22: error: redeclaration of enumerator 'B_FAIL'
+    4 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                      ^~~~~~
+./src/b/b.h:3:22: note: previous definition of 'B_FAIL' with type 'enum <anonymous>'
+    3 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                      ^~~~~~
+gen/types_now.h:4:31: error: conflicting types for 'b_status_E'; have 'enum <anonymous>'
+    4 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                               ^~~~~~~~~~
+./src/b/b.h:3:31: note: previous declaration of 'b_status_E' with type 'b_status_E'
+    3 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                               ^~~~~~~~~~
++ gcc -std=c23 -fsyntax-only -I . t_flagged.c
++ echo flagged-ok
+flagged-ok
+===== GCC 13 native e2 default
+gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+#define __STDC_VERSION__ 201710L
++ gcc -fsyntax-only -I . t_now.c
+In file included from t_now.c:2:
+gen/types_now.h:4:16: error: redeclaration of enumerator 'B_OK'
+    4 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                ^~~~
+In file included from src/a/helper.h:1,
+                 from t_now.c:1:
+./src/b/b.h:3:16: note: previous definition of 'B_OK' with type 'enum <anonymous>'
+    3 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                ^~~~
+gen/types_now.h:4:22: error: redeclaration of enumerator 'B_FAIL'
+    4 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                      ^~~~~~
+./src/b/b.h:3:22: note: previous definition of 'B_FAIL' with type 'enum <anonymous>'
+    3 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                      ^~~~~~
+gen/types_now.h:4:31: error: conflicting types for 'b_status_E'; have 'enum <anonymous>'
+    4 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                               ^~~~~~~~~~
+./src/b/b.h:3:31: note: previous declaration of 'b_status_E' with type 'b_status_E'
+    3 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                               ^~~~~~~~~~
++ gcc -fsyntax-only -I . t_flagged.c
++ echo flagged-ok
+flagged-ok
+===== GCC 13 native e2 -std=c2x
+gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+#define __STDC_VERSION__ 202000L
++ gcc -std=c2x -fsyntax-only -I . t_now.c
+In file included from t_now.c:2:
+gen/types_now.h:4:16: error: redeclaration of enumerator 'B_OK'
+    4 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                ^~~~
+In file included from src/a/helper.h:1,
+                 from t_now.c:1:
+./src/b/b.h:3:16: note: previous definition of 'B_OK' with type 'enum <anonymous>'
+    3 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                ^~~~
+gen/types_now.h:4:22: error: redeclaration of enumerator 'B_FAIL'
+    4 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                      ^~~~~~
+./src/b/b.h:3:22: note: previous definition of 'B_FAIL' with type 'enum <anonymous>'
+    3 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                      ^~~~~~
+gen/types_now.h:4:31: error: conflicting types for 'b_status_E'; have 'enum <anonymous>'
+    4 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                               ^~~~~~~~~~
+./src/b/b.h:3:31: note: previous declaration of 'b_status_E' with type 'b_status_E'
+    3 | typedef enum { B_OK, B_FAIL } b_status_E;
+      |                               ^~~~~~~~~~
++ gcc -std=c2x -fsyntax-only -I . t_flagged.c
++ echo flagged-ok
+flagged-ok

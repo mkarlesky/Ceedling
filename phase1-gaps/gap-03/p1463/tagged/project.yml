@@ -1,0 +1,18 @@
+:project:
+  :which_ceedling: /home/user/Ceedling
+  :use_mocks: TRUE
+  :use_partials: TRUE
+  :build_root: build
+:paths:
+  :test:
+    - test/**
+  :source:
+    - src/**
+  :include:
+    - .
+    - src/**
+:plugins:
+  :enabled:
+    - report_tests_pretty_stdout
+:cmock:
+  :mock_prefix: mock_

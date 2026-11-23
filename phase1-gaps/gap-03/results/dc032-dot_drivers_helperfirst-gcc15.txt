@@ -1,0 +1,63 @@
+# Trimmed from the full --verbosity=obnoxious log of work/dc032-dot_drivers_helperfirst-gcc15.log (213 lines).
+# Kept: the run header, Ceedling's launch lines, step headings, NOTICEs, compiler errors,
+# the test file's compile command, test results and the exit status. Line numbers are the full log's.
+1:### project dc032/dot_drivers_helperfirst, compiler gcc15: gcc (GCC) 15.3.0
+2:### default C standard: #define __STDC_VERSION__ 202311L
+6: > Set which Ceedling from config :project ↳ :which_ceedling => /home/user/Ceedling
+7: > Launching Ceedling from /home/user/Ceedling/
+34:ℹ️ NOTICE: Enabled :test_runner ↳ :cmdline_args because :project ↳ :use_backtrace is enabled.
+86:Preprocessing test files for follow-on details extraction steps test_helper.c...
+109:Generating mock for test/test_helper::foo.h...
+115:Preprocessing test file test_helper.c...
+132:Generating runner for test_helper.c...
+142:Compiling test_helper.c...
+144:`gcc -I"build/test/mocks/test/test_helper/_t_" -I"build/test/mocks/test/test_helper/_t_/src/drivers" -I"." -I"src/drivers" -I"build/vendor/unity/src" -I"build/vendor/cmock/src" -D"CMOCK_MOCK_PREFIX=mock_" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "test/test_helper.c" -o "build/test/out/test/test_helper/_t_/test/test_helper.o" -MMD -MF "build/test/dependencies/test/test_helper/_t_/test/test_helper.d"`
+149:ℹ️ NOTICE: Compiling an isolated copy of 'src/drivers/helper.c' for this test because it shares a directory with mocked header './src/drivers/foo.h', whose inline functions it would otherwise call instead of the mock.
+150:Compiling test/test_helper::helper.c...
+155:Compiling test/test_helper::mock_foo.c...
+160:Compiling test/test_helper::test_helper_runner.c...
+165:Compiling test/test_helper::unity.c...
+170:Compiling test/test_helper::cmock.c...
+180:Linking test_helper.out...
+190:Running test_helper.out...
+196:test_helper.c:8:test_helper_value:PASS
+197:test_helper.c:17:test_foo_twice_is_mocked:FAIL: Expected 100 Was 6
+200:2 Tests 1 Failures 0 Ignored 
+213:### ceedling exit status 1
+
+# ---- generated file build/test/dependencies/test/test_helper/_t_/test/test_helper.d
+build/test/out/test/test_helper/_t_/test/test_helper.o: \
+ test/test_helper.c build/vendor/unity/src/unity.h \
+ build/vendor/unity/src/unity_internals.h src/drivers/helper.h \
+ src/drivers/foo.h \
+ build/test/mocks/test/test_helper/_t_/src/drivers/mock_foo.h \
+ build/test/mocks/test/test_helper/_t_/src/drivers/foo.h
+
+# ---- generated file build/test/dependencies/test/test_helper/_t_/test_helper_runner.d
+build/test/out/test/test_helper/_t_/test_helper_runner.o: \
+ build/test/runners/test/test_helper_runner.c \
+ build/vendor/unity/src/unity.h build/vendor/unity/src/unity_internals.h \
+ build/vendor/cmock/src/cmock.h build/vendor/cmock/src/cmock_internals.h \
+ src/drivers/helper.h src/drivers/foo.h \
+ build/test/mocks/test/test_helper/_t_/src/drivers/mock_foo.h \
+ build/test/mocks/test/test_helper/_t_/src/drivers/foo.h
+
+# ---- files under build/test/mocks
+build/test/mocks/test/test_helper/_t_/src/drivers/foo.h
+build/test/mocks/test/test_helper/_t_/src/drivers/mock_foo.c
+build/test/mocks/test/test_helper/_t_/src/drivers/mock_foo.h
+
+# ---- generated file build/test/mocks/test/test_helper/_t_/src/drivers/foo.h (CMock's copy under :treat_inlines: :include)
+#ifndef FOO_H
+#define FOO_H
+int foo_read(void);
+int foo_twice(int x);
+#endif
+
+# ---- line markers naming src/drivers in the preprocessed test file (build/test/preprocess/files/.../full_expansion/test/test_helper.c)
+# 1 "src/drivers/helper.h" 1
+# 1 "src/drivers/foo.h" 1
+# 4 "src/drivers/helper.h" 2
+# 1 "build/test/mocks/test/test_helper/_t_/src/drivers/mock_foo.h" 1
+# 1 "build/test/mocks/test/test_helper/_t_/src/drivers/foo.h" 1
+# 7 "build/test/mocks/test/test_helper/_t_/src/drivers/mock_foo.h" 2
