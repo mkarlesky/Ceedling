@@ -1,0 +1,6 @@
+ > Launching Ceedling from /home/user/Ceedling/
+ℹ️ NOTICE: Multiple files matched 'util.h' but chose 'include/a/util.h' by search-path priority. Other candidates: include/b/util.h. Add more path to 'util.h' at its point of reference to select a different file.
+ℹ️ NOTICE: Multiple files matched 'util.c' but chose 'src/a/util.c' by search-path priority. Other candidates: src/b/util.c. Add more path to 'util.c' at its point of reference to select a different file.
+TESTED:  1
+PASSED:  1
+FAILED:  0

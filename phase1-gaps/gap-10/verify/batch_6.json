@@ -1,0 +1,167 @@
+[
+ {
+  "id": "GAP10-51",
+  "kind": "test",
+  "title": "compile_commands.json is keyed by the compiled source path and rewrites a temporary copy to its original",
+  "claim": "Verdict: kept. The plugin writes `<build root>/artifacts/compile_commands.json`. Its in-memory database is keyed by `entry['file']`, the compiled source path, so a later compile replaces an earlier one. A same-named pair of generated Partials gets two entries (`.../_t_/a/ceedling_partial_util_impl.c`, `.../_t_/b/...`). A compile of a temporary copy has the copy's path replaced by the original in the command line.",
+  "evidence": [
+   "docs/mkdocs/plugins/compile-commands-json-db.md:21-27",
+   "plugins/compile_commands_json_db/lib/compile_commands_json_db.rb:19",
+   "plugins/compile_commands_json_db/lib/compile_commands_json_db.rb:36",
+   "plugins/compile_commands_json_db/lib/compile_commands_json_db.rb:55-61",
+   "phase1-gaps/gap-10/collide/excerpts/v1cc_compile_commands_keys.txt"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-52",
+  "kind": "promise",
+  "title": "cppcheck:<filename> takes a trailing path and chooses silently among same-named sources",
+  "claim": "Verdict: partly kept. The docs say \"by filename with no path\". The rule calls `find_source_file`, which uses the non-strict lookup: a trailing path narrows the match, and an ambiguous name resolves to the first source in collection order with a one-time NOTICE and no error. The `test:` tasks raise on the same ambiguity.",
+  "evidence": [
+   "docs/mkdocs/plugins/cppcheck.md:513-515",
+   "plugins/cppcheck/cppcheck.rake:40-48",
+   "lib/ceedling/filesystem/file_finder.rb:237-239",
+   "lib/ceedling/filesystem/file_finder.rb:468-481",
+   "lib/ceedling/filesystem/file_finder_helper.rb:33-47"
+  ],
+  "issues": [],
+  "severity": "low",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-53",
+  "kind": "promise",
+  "title": "Plugin docs spell the default build root where the plugin follows :build_root",
+  "claim": "Verdict: partly kept. The Cppcheck, Bullseye and Gcov docs print `build/artifacts/...` and `build/gcov/out/`. The plugins build those paths from `PROJECT_BUILD_ARTIFACTS_ROOT` and `PROJECT_BUILD_ROOT`, so the doc paths hold only for `:build_root: build`. Other docs of the same plugins write `<build root>`.",
+  "evidence": [
+   "docs/mkdocs/plugins/cppcheck.md:535-542",
+   "docs/mkdocs/plugins/bullseye/index.md:206",
+   "docs/mkdocs/plugins/bullseye/index.md:351-356",
+   "docs/mkdocs/plugins/gcov/setup.md:122-123",
+   "docs/mkdocs/plugins/gcov/gcovr.md:4",
+   "plugins/cppcheck/lib/cppcheck_constants.rb:13-15",
+   "plugins/bullseye/lib/bullseye_constants.rb:13-22"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-54",
+  "kind": "promise",
+  "title": "Cppcheck report filenames lose any directory and take the plugin's extension",
+  "claim": "Verdict: partly kept. `form_artifact_filepath` is `File.join(CPPCHECK_ARTIFACTS_PATH, File.basename(filename).ext(extension))`. A configured name with a directory keeps only its basename. `ext` replaces the configured name's extension with the plugin's own (`.sarif`, `.txt`, `.xml`). The docs call each setting a filename and show names with the right extension.",
+  "evidence": [
+   "docs/mkdocs/plugins/cppcheck.md:174-215",
+   "docs/mkdocs/plugins/cppcheck.md:544-545",
+   "plugins/cppcheck/lib/cppcheck_reports.rb:41-46"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-55",
+  "kind": "promise",
+  "title": "Whole-project Cppcheck passes the :paths include and source lists, or none with a project file",
+  "claim": "Verdict: kept. `generate_reports` passes `COLLECTION_PATHS_INCLUDE` and `COLLECTION_PATHS_SOURCE`, or empty lists when `:cppcheck` ↳ `:project` is set. `:includes` and `:excludes` entries become `--include=` and `-i` options as written. Test-only search paths, generated roots and `TEST_INCLUDE_PATH` entries are not passed.",
+  "evidence": [
+   "docs/mkdocs/plugins/cppcheck.md:237-251",
+   "docs/mkdocs/plugins/cppcheck.md:28",
+   "plugins/cppcheck/lib/cppcheck.rb:59-66",
+   "plugins/cppcheck/lib/cppcheck.rb:321-327"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-56",
+  "kind": "promise",
+  "title": "Cppcheck suppression files come from :paths :cppcheck and :files :cppcheck",
+  "claim": "Verdict: kept. Each `:paths` ↳ `:cppcheck` entry contributes its `*.xml` and `*<extension>` files, a path that does not exist logs a warning, and `:files` ↳ `:cppcheck` revises the list. `files:cppcheck` lists the result.",
+  "evidence": [
+   "docs/mkdocs/plugins/cppcheck.md:433-445",
+   "docs/mkdocs/plugins/cppcheck.md:521-531",
+   "plugins/cppcheck/lib/cppcheck.rb:250-275",
+   "plugins/cppcheck/cppcheck.rake:49-62"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-57",
+  "kind": "promise",
+  "title": "The Bullseye coverage file is test.cov in the working directory",
+  "claim": "Verdict: kept (the Bullseye behavior itself is untestable here). `BULLSEYE_COVFILE_PATH` is the literal `test.cov`, a path relative to the working directory, which is the project root whenever the project file is loaded from it. The Bullseye claim that sources are stored relative to the file and that this root is the common ancestor was not run.",
+  "evidence": [
+   "docs/mkdocs/plugins/bullseye/index.md:55-62",
+   "plugins/bullseye/lib/bullseye_constants.rb:35",
+   "plugins/bullseye/lib/bullseye.rb:453-475"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-58",
+  "kind": "promise",
+  "title": "Untested sources compile with the :include collection, matchers keyed by the source's own path",
+  "claim": "Verdict: kept. Both plugins compile an untested source with `form_test_object_filepath(filepath, context:)`, resolve flags and defines against that source's filepath, and Bullseye passes `collection_paths_include` as its search paths. An object sits below `<build root>/<plugin>/out/` at the source's own directory, so same-named sources in different directories do not share an object. Not run.",
+  "evidence": [
+   "docs/mkdocs/plugins/bullseye/index.md:149-155",
+   "docs/mkdocs/plugins/gcov/setup.md:119-123",
+   "docs/mkdocs/plugins/gcov/setup.md:146-150",
+   "plugins/bullseye/lib/bullseye.rb:236-246",
+   "plugins/gcov/lib/gcov.rb:167",
+   "lib/ceedling/filesystem/file_path_utils.rb:633-639"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-59",
+  "kind": "promise",
+  "title": "Gcovr's default exclusions are path-segment patterns built from :paths, :test_file_prefix and :build_root",
+  "claim": "Verdict: kept. `build_report_exclusions` builds `.*(?:^|/)<test path>/(?:.*/)?<prefix>[^/]+<ext>$` for each `:paths` ↳ `:test` entry, `.*(?:^|/)<support path>/.+<ext>$` for each support entry, and `.*(?:^|/)<build root>/.+\\.c$`. The patterns do not start at the project root. A test path `test` also matches `drivers/legacy/test/test_wire.c` and does not match `latest/test_x.c` (a check of the pattern in Ruby; gcovr uses Python's `re`, same for this pattern).",
+  "evidence": [
+   "docs/mkdocs/plugins/gcov/gcovr.md:54-121",
+   "plugins/gcov/lib/gcovr_reportinator.rb:508-541",
+   "plugins/gcov/lib/gcov_reportinator.rb:62-71",
+   "phase1-gaps/gap-10/gcov_pattern_check.txt"
+  ],
+  "issues": [],
+  "severity": "low",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-60",
+  "kind": "promise",
+  "title": "ReportGenerator filters are relative ./ globs for test paths and the build root, plus ceedling_partial_*",
+  "claim": "Verdict: kept. `build_filefilter_exclusions` writes `-./<test path>/**/*` for each test path and `-./<build root>/**/*`. With Partials on, `-ceedling_partial_*` is added. The patterns assume project-relative paths spelled with a leading `./`. The `.gcno` scan skips test-prefixed files anywhere and mocks, runners, `unity` and `cmock` only below the build root.",
+  "evidence": [
+   "docs/mkdocs/plugins/gcov/reportgenerator.md:28-96",
+   "plugins/gcov/lib/reportgenerator_reportinator.rb:177-187",
+   "plugins/gcov/lib/reportgenerator_reportinator.rb:329-336",
+   "plugins/gcov/lib/reportgenerator_reportinator.rb:357-372"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ }
+]

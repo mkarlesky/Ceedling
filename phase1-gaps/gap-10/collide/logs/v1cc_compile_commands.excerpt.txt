@@ -1,0 +1,4 @@
+ > Launching Ceedling from /home/user/Ceedling/
+TESTED:  1
+PASSED:  1
+FAILED:  0

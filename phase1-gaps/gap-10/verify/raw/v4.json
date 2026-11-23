@@ -1,0 +1,11 @@
+{"verdicts":[
+{"id":"GAP10-31","verdict":"confirmed","evidence":["plugins/dependencies/dependencies.rake:122-129"],"note":"Listed unbuilt in deps/results.txt."},
+{"id":"GAP10-32","verdict":"confirmed","evidence":["bin/composinator.rb:30-34","bin/mixins.rb:9"],"note":""},
+{"id":"GAP10-33","verdict":"confirmed","evidence":["bin/mixin_resolvinator.rb:93-96","bin/composinator.rb:32"],"note":"'As written' is loose: paths are standardized first (separators, ~) but not made absolute."},
+{"id":"GAP10-34","verdict":"partly","evidence":["bin/path_validator.rb:33-36","bin/cli_handler.rb:611-617","lib/ceedling/filesystem/project_paths.rb:45"],"note":"Verifier returned confirmed on the code description but found the Windows worry unfounded: command line, environment and :enabled mixin values are run through standardize_paths, which turns \\ into /, before filepath? sees them (cli_handler.rb:49,587,611-617; mixinator.rb:85; mixin_resolvinator.rb:89). Recorded as partly by the investigator because the 'untestable' verdict and the hedge in the claim are wrong."},
+{"id":"GAP10-35","verdict":"confirmed","evidence":["bin/recursive_merger.rb:79-90","bin/recursive_merger.rb:126-132"],"note":"'Not changed afterwards' has no direct citation; nothing contradicts it."},
+{"id":"GAP10-36","verdict":"confirmed","evidence":["bin/mixin_resolvinator.rb:109-111"],"note":""},
+{"id":"GAP10-37","verdict":"confirmed","evidence":["lib/ceedling/config/configurator_setup.rb:117-119","phase1-gaps/gap-10/cli/results_include_min.txt"],"note":"Record is a two-line summary and no script runs the noinc project."},
+{"id":"GAP10-38","verdict":"confirmed","evidence":["lib/ceedling/config/configurator_setup.rb:116-119","lib/ceedling/config/configurator.rb:26"],"note":"The release/min project is not in the tree and no script generates it."},
+{"id":"GAP10-39","verdict":"confirmed","evidence":["lib/ceedling/config/configurator.rb:368-376","lib/ceedling/config/configurator.rb:702-706"],"note":""},
+{"id":"GAP10-40","verdict":"partly","evidence":["bin/installation_selector.rb:24-34","bin/installation_selector.rb:61-62"],"note":"Code claim right. 'Every experiment log here shows Launching Ceedling from :which_ceedling' is overstated: the launch line names no source, and only release logs show 'Set which Ceedling from config'. No experiment exercises ~ expansion."}]}

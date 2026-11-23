@@ -1,0 +1,7 @@
+ > Launching Ceedling from /home/user/Ceedling/
+Linking test_collide.out...
+ℹ️ NOTICE: The linker output appears to report a symbol defined more than once.
+🧨 EXCEPTION: 'Default Test Linker' (gcc) terminated with exit code [1] and output ⏩️
+/home/user/Ceedling/phase1-gaps/gap-10/collide/proj/v1b_public_calls_static/build/test/partials/test/test_collide/_t_/b/ceedling_partial_util_impl.c:3: multiple definition of `util_helper'; build/test/out/test/test_collide/_t_/a/ceedling_partial_util_impl.o:/home/user/Ceedling/phase1-gaps/gap-10/collide/proj/v1b_public_calls_static/build/test/partials/test/test_collide/_t_/a/ceedling_partial_util_impl.c:3: first defined here
+collect2: error: ld returned 1 exit status
+Executed Command: gcc "build/test/out/test/test_collide/_t_/test/test_collide.o" "build/test/out/test/test_collide/_t_/a/ceedling_partial_util_impl.o" "build/test/out/test/test_collide/_t_/b/ceedling_partial_util_impl.o" "build/test/out/test/test_collide/_t_/test_collide_runner.o" "build/test/out/test/test_collide/_t_/unity.o" -o "build/test/out/test/test_collide/_t_/test_collide.out"

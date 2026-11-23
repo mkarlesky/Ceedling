@@ -1,0 +1,12 @@
+ > Launching Ceedling from /home/user/Ceedling/
+Linking test_collide.out...
+ℹ️ NOTICE: The linker output appears to report missing symbols.
+• This test lacks #include statements corresponding to needed source files (see notes below).
+ℹ️ NOTICE: The linker output appears to report a symbol defined more than once.
+🧨 EXCEPTION: 'Default Test Linker' (gcc) terminated with exit code [1] and output ⏩️
+/home/user/Ceedling/phase1-gaps/gap-10/collide/proj/v6b_mock_both_no_folder/build/test/mocks/test/test_collide/_t_/b/Mockceedling_partial_util_interface.c:29: multiple definition of `Mockceedling_partial_util_interface_Verify'; build/test/out/test/test_collide/_t_/a/Mockceedling_partial_util_interface.o:/home/user/Ceedling/phase1-gaps/gap-10/collide/proj/v6b_mock_both_no_folder/build/test/mocks/test/test_collide/_t_/a/Mockceedling_partial_util_interface.c:29: first defined here
+/home/user/Ceedling/phase1-gaps/gap-10/collide/proj/v6b_mock_both_no_folder/build/test/mocks/test/test_collide/_t_/b/Mockceedling_partial_util_interface.c:41: multiple definition of `Mockceedling_partial_util_interface_Init'; build/test/out/test/test_collide/_t_/a/Mockceedling_partial_util_interface.o:/home/user/Ceedling/phase1-gaps/gap-10/collide/proj/v6b_mock_both_no_folder/build/test/mocks/test/test_collide/_t_/a/Mockceedling_partial_util_interface.c:41: first defined here
+/home/user/Ceedling/phase1-gaps/gap-10/collide/proj/v6b_mock_both_no_folder/build/test/mocks/test/test_collide/_t_/b/Mockceedling_partial_util_interface.c:46: multiple definition of `Mockceedling_partial_util_interface_Destroy'; build/test/out/test/test_collide/_t_/a/Mockceedling_partial_util_interface.o:/home/user/Ceedling/phase1-gaps/gap-10/collide/proj/v6b_mock_both_no_folder/build/test/mocks/test/test_collide/_t_/a/Mockceedling_partial_util_interface.c:46: first defined here
+/home/user/Ceedling/phase1-gaps/gap-10/collide/proj/v6b_mock_both_no_folder/test/test_collide.c:9:(.text+0x42): undefined reference to `b_pub_ExpectAndReturn'
+collect2: error: ld returned 1 exit status
+Executed Command: gcc "build/test/out/test/test_collide/_t_/test/test_collide.o" "build/test/out/test/test_collide/_t_/a/Mockceedling_partial_util_interface.o" "build/test/out/test/test_collide/_t_/b/Mockceedling_partial_util_interface.o" "build/test/out/test/test_collide/_t_/test_collide_runner.o" "build/test/out/test/test_collide/_t_/unity.o" "build/test/out/test/test_collide/_t_/cmock.o" -o "build/test/out/test/test_collide/_t_/test_collide.out"

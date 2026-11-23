@@ -1,0 +1,6 @@
+only source: fetch=ext/src source=ext/src build=ext/src artifact=dependencies/X working=["ext/src"] artifacts_only=["dependencies/X"]
+source+fetch: fetch=ext/f source=ext/s build=ext/s artifact=dependencies/X working=["ext/f", "ext/s"] artifacts_only=["dependencies/X"]
+only artifact: fetch=dependencies/X source=dependencies/X build=dependencies/X artifact=out working=["out"] artifacts_only=["out"]
+only build: fetch=dependencies/X source=dependencies/X build=b artifact=b working=["b"] artifacts_only=["b"]
+none: fetch=dependencies/X source=dependencies/X build=dependencies/X artifact=dependencies/X working=["dependencies/X"] artifacts_only=[]
+fetch+artifact: fetch=ext/f source=ext/f build=ext/f artifact=out working=["ext/f", "out"] artifacts_only=["out"]

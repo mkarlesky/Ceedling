@@ -1,0 +1,551 @@
+[
+ {
+  "id": "GAP10-01",
+  "verdict": "confirmed",
+  "evidence": [
+   "phase1-gaps/gap-10/collide/results.txt",
+   "phase1-gaps/gap-10/collide/excerpts/v1_a_impl.c:1-5"
+  ],
+  "note": "Static variables are not dropped like static functions (v7); claim speaks of the function only."
+ },
+ {
+  "id": "GAP10-02",
+  "verdict": "confirmed",
+  "evidence": [
+   "phase1-gaps/gap-10/collide/logs/v2_public_same_pub.excerpt.txt",
+   "phase1-gaps/gap-10/collide/logs/v3_private_same_static.excerpt.txt"
+  ],
+  "note": "v3 log also shows undefined references to a_pub/b_pub; irrelevant to the claim."
+ },
+ {
+  "id": "GAP10-03",
+  "verdict": "confirmed",
+  "evidence": [
+   "phase1-gaps/gap-10/collide/logs/v4_public_same_var.excerpt.txt",
+   "lib/ceedling/partials/partials.rb:93-94"
+  ],
+  "note": ""
+ },
+ {
+  "id": "GAP10-04",
+  "verdict": "confirmed",
+  "evidence": [
+   "phase1-gaps/gap-10/collide/excerpts/v6_mock_decls.txt",
+   "lib/ceedling/defaults.rb:409",
+   "vendor/cmock/lib/cmock_config.rb:18"
+  ],
+  "note": "v6b log also shows undefined reference to b_pub_ExpectAndReturn."
+ },
+ {
+  "id": "GAP10-05",
+  "verdict": "confirmed",
+  "evidence": [
+   "lib/ceedling/partials/partials.rb:93-94",
+   "lib/ceedling/ceedling.h:32-33"
+  ],
+  "note": ""
+ },
+ {
+  "id": "GAP10-06",
+  "verdict": "confirmed",
+  "evidence": [
+   "lib/ceedling/c_identifier.rb:17-19"
+  ],
+  "note": ""
+ },
+ {
+  "id": "GAP10-07",
+  "verdict": "confirmed",
+  "evidence": [
+   "lib/ceedling/partials/partializer_helper.rb:298-301",
+   "lib/ceedling/ceedling.h:25"
+  ],
+  "note": ""
+ },
+ {
+  "id": "GAP10-08",
+  "verdict": "partly",
+  "evidence": [
+   "phase1-gaps/gap-10/collide/excerpts/v8_preprocessed_test_head.c:3",
+   "lib/ceedling/ceedling.h:14,40",
+   "lib/ceedling/partials/partializer_config.rb:276-300"
+  ],
+  "note": "Core confirmed. (1) The notice blaming missing #include lines is not in captured evidence because run.sh's grep dropped it. (2) The #1460 reference cannot be checked against the repo."
+ },
+ {
+  "id": "GAP10-09",
+  "verdict": "confirmed",
+  "evidence": [
+   "phase1-gaps/gap-10/collide/excerpts/v4_a_impl.h:6",
+   "phase1-gaps/gap-10/collide/excerpts/v4_compile_command.txt"
+  ],
+  "note": "Resolver-skipping-includer inference is sound but not exercised; #1464 not checkable in repo."
+ },
+ {
+  "id": "GAP10-10",
+  "verdict": "confirmed",
+  "evidence": [
+   "phase1-gaps/gap-10/collide/excerpts/v1_runner_head.c:5",
+   "lib/ceedling/generators/generator_test_runner.rb:56-60"
+  ],
+  "note": "Cause not traced, as the claim says; the -I order for the runner compile was not captured."
+ },
+ {
+  "id": "GAP10-11",
+  "verdict": "confirmed",
+  "evidence": [
+   "lib/ceedling/partials/partializer_config.rb:257-270"
+  ],
+  "note": "Validation and key logic as stated."
+ },
+ {
+  "id": "GAP10-12",
+  "verdict": "confirmed",
+  "evidence": [
+   "lib/ceedling/filesystem/file_path_utils.rb:496-503",
+   "lib/ceedling/ceedling.h:40",
+   "lib/ceedling/ceedling.h:68"
+  ],
+  "note": "Cited excerpt v1_a_impl.h:1 is only a guard; the link and compile logs show the directory."
+ },
+ {
+  "id": "GAP10-13",
+  "verdict": "confirmed",
+  "evidence": [
+   "lib/ceedling/filesystem/file_path_utils.rb:305-307"
+  ],
+  "note": "Layout shown in logs."
+ },
+ {
+  "id": "GAP10-14",
+  "verdict": "confirmed",
+  "evidence": [
+   "phase1-gaps/gap-10/collide/logs/v1b_public_calls_static.excerpt.txt"
+  ],
+  "note": "That run exited 1 on a multiple definition, but the quoted link command is as described."
+ },
+ {
+  "id": "GAP10-15",
+  "verdict": "confirmed",
+  "evidence": [
+   "phase1-gaps/gap-10/collide/logs/v9_unqualified_ambiguous.excerpt.txt",
+   "lib/ceedling/filesystem/file_finder_helper.rb:33-47"
+  ],
+  "note": "The quoted docs sentence is at configuration.md:48, not the cited 42-45."
+ },
+ {
+  "id": "GAP10-16",
+  "verdict": "partly",
+  "evidence": [
+   "lib/ceedling/rakefiles/tests/tasks_tests.rake:49-56",
+   "phase1-gaps/gap-10/cli/results.txt"
+  ],
+  "note": "test:path[Test] found none (case) was never run in run_cli.sh/results.txt; it follows from the code."
+ },
+ {
+  "id": "GAP10-17",
+  "verdict": "partly",
+  "evidence": [
+   "lib/ceedling/rakefiles/tests/tasks_tests.rake:37-47",
+   "phase1-gaps/gap-10/cli/results.txt"
+  ],
+  "note": "test:path[gap-10] found nothing was not in run_cli.sh; inferred from code and relative paths."
+ },
+ {
+  "id": "GAP10-18",
+  "verdict": "confirmed",
+  "evidence": [
+   "phase1-gaps/gap-10/cli/results.txt",
+   "lib/ceedling/filesystem/file_finder.rb:80-83",
+   "lib/ceedling/filesystem/path_matcher.rb:20-33"
+  ],
+  "note": "Backslash form passed single-quoted, reaches Ceedling."
+ },
+ {
+  "id": "GAP10-19",
+  "verdict": "confirmed",
+  "evidence": [
+   "plugins/bullseye/bullseye.rake:70-90",
+   "plugins/gcov/gcov.rake:70-90"
+  ],
+  "note": "Pattern task differs only in Ruby syntax."
+ },
+ {
+  "id": "GAP10-20",
+  "verdict": "confirmed",
+  "evidence": [
+   "lib/ceedling/rakefiles/base/tasks_filesystem.rake:72-80",
+   "phase1-gaps/gap-10/deps/cli_tasks.txt"
+  ],
+  "note": "Cited path phase1-gaps/gap-10/cli_tasks.txt does not exist; file is deps/cli_tasks.txt, and no script generates it."
+ },
+ {
+  "id": "GAP10-21",
+  "verdict": "confirmed",
+  "evidence": [
+   "lib/ceedling/rakefiles/base/tasks_filesystem.rake:93-98",
+   "lib/ceedling/defaults.rb:308-313"
+  ],
+  "note": "Cited path cli_tasks.txt is really deps/cli_tasks.txt. use_assembly FALSE is the default, not explicit in gen_deps.sh."
+ },
+ {
+  "id": "GAP10-22",
+  "verdict": "confirmed",
+  "evidence": [
+   "docs/mkdocs/plugins/dependencies.md:245-251",
+   "lib/ceedling/rakefiles/base/tasks_filesystem.rake:94-98"
+  ],
+  "note": "Path of cli_tasks.txt wrong in the citation only."
+ },
+ {
+  "id": "GAP10-23",
+  "verdict": "confirmed",
+  "evidence": [
+   "plugins/dependencies/lib/dependency_spec.rb:103",
+   "plugins/dependencies/lib/dependencies.rb:53-55",
+   "plugins/dependencies/lib/dependencies.rb:146-149"
+  ],
+  "note": "Path of cli_tasks.txt wrong in the citation only."
+ },
+ {
+  "id": "GAP10-24",
+  "verdict": "confirmed",
+  "evidence": [
+   "plugins/dependencies/lib/dependency_spec.rb:74-75",
+   "phase1-gaps/gap-10/dependencies_paths.txt"
+  ],
+  "note": "BC remark is a judgement."
+ },
+ {
+  "id": "GAP10-25",
+  "verdict": "confirmed",
+  "evidence": [
+   "plugins/dependencies/lib/dependency_spec.rb:83-84",
+   "plugins/dependencies/lib/dependencies.rb:94-96",
+   "plugins/dependencies/lib/dependencies.rb:194-198"
+  ],
+  "note": "Doc wording 'working paths' is loose, so partly kept is fair."
+ },
+ {
+  "id": "GAP10-26",
+  "verdict": "confirmed",
+  "evidence": [
+   "plugins/dependencies/lib/dependency_spec.rb:140-144",
+   "lib/ceedling/filesystem/project_paths.rb:44-50"
+  ],
+  "note": "Only bare ~ or ~/ expands; ~user is left. No experiment backs it."
+ },
+ {
+  "id": "GAP10-27",
+  "verdict": "confirmed",
+  "evidence": [
+   "plugins/dependencies/lib/dependencies.rb:111",
+   "lib/ceedling/config/configurator_builder.rb:139-148"
+  ],
+  "note": "Holds for default and relative :output; an absolute :output moves the target and deploy follows. results.txt does not run dependencies:deploy."
+ },
+ {
+  "id": "GAP10-28",
+  "verdict": "partly",
+  "evidence": [
+   "plugins/dependencies/lib/dependencies.rb:194-204",
+   "plugins/dependencies/lib/dependencies.rb:214-220",
+   "plugins/dependencies/lib/dependencies.rb:218"
+  ],
+  "note": "Core right. 'Each build step runs in spec.source_path' holds only for command-line steps; a :build_lib Symbol step goes to build_builtin without a chdir (line 218). Path creation (line 214) happens only when build steps exist (lines 209-212 return first)."
+ },
+ {
+  "id": "GAP10-29",
+  "verdict": "confirmed",
+  "evidence": [
+   "plugins/dependencies/lib/dependencies.rb:324-338"
+  ],
+  "note": "None."
+ },
+ {
+  "id": "GAP10-30",
+  "verdict": "confirmed",
+  "evidence": [
+   "plugins/dependencies/lib/dependencies.rb:234-250"
+  ],
+  "note": "None."
+ },
+ {
+  "id": "GAP10-31",
+  "verdict": "confirmed",
+  "evidence": [
+   "plugins/dependencies/dependencies.rake:122-129"
+  ],
+  "note": "Listed unbuilt in deps/results.txt."
+ },
+ {
+  "id": "GAP10-32",
+  "verdict": "confirmed",
+  "evidence": [
+   "bin/composinator.rb:30-34",
+   "bin/mixins.rb:9"
+  ],
+  "note": ""
+ },
+ {
+  "id": "GAP10-33",
+  "verdict": "confirmed",
+  "evidence": [
+   "bin/mixin_resolvinator.rb:93-96",
+   "bin/composinator.rb:32"
+  ],
+  "note": "'As written' is loose: paths are standardized first (separators, ~) but not made absolute."
+ },
+ {
+  "id": "GAP10-34",
+  "verdict": "partly",
+  "evidence": [
+   "bin/path_validator.rb:33-36",
+   "bin/cli_handler.rb:611-617",
+   "lib/ceedling/filesystem/project_paths.rb:45"
+  ],
+  "note": "Verifier returned confirmed on the code description but found the Windows worry unfounded: command line, environment and :enabled mixin values are run through standardize_paths, which turns \\ into /, before filepath? sees them (cli_handler.rb:49,587,611-617; mixinator.rb:85; mixin_resolvinator.rb:89). Recorded as partly by the investigator because the 'untestable' verdict and the hedge in the claim are wrong."
+ },
+ {
+  "id": "GAP10-35",
+  "verdict": "confirmed",
+  "evidence": [
+   "bin/recursive_merger.rb:79-90",
+   "bin/recursive_merger.rb:126-132"
+  ],
+  "note": "'Not changed afterwards' has no direct citation; nothing contradicts it."
+ },
+ {
+  "id": "GAP10-36",
+  "verdict": "confirmed",
+  "evidence": [
+   "bin/mixin_resolvinator.rb:109-111"
+  ],
+  "note": ""
+ },
+ {
+  "id": "GAP10-37",
+  "verdict": "confirmed",
+  "evidence": [
+   "lib/ceedling/config/configurator_setup.rb:117-119",
+   "phase1-gaps/gap-10/cli/results_include_min.txt"
+  ],
+  "note": "Record is a two-line summary and no script runs the noinc project."
+ },
+ {
+  "id": "GAP10-38",
+  "verdict": "confirmed",
+  "evidence": [
+   "lib/ceedling/config/configurator_setup.rb:116-119",
+   "lib/ceedling/config/configurator.rb:26"
+  ],
+  "note": "The release/min project is not in the tree and no script generates it."
+ },
+ {
+  "id": "GAP10-39",
+  "verdict": "confirmed",
+  "evidence": [
+   "lib/ceedling/config/configurator.rb:368-376",
+   "lib/ceedling/config/configurator.rb:702-706"
+  ],
+  "note": ""
+ },
+ {
+  "id": "GAP10-40",
+  "verdict": "partly",
+  "evidence": [
+   "bin/installation_selector.rb:24-34",
+   "bin/installation_selector.rb:61-62"
+  ],
+  "note": "Code claim right. 'Every experiment log here shows Launching Ceedling from :which_ceedling' is overstated: the launch line names no source, and only release logs show 'Set which Ceedling from config'. No experiment exercises ~ expansion."
+ },
+ {
+  "id": "GAP10-41",
+  "verdict": "confirmed",
+  "evidence": [
+   "bin/installation_selector.rb:14",
+   "bin/installation_selector.rb:53-54",
+   "bin/installation_selector.rb:61-64"
+  ],
+  "note": "Doc cite :60 only covers vendor/ceedling; the relative-path sentence is which-ceedling.md:78-81."
+ },
+ {
+  "id": "GAP10-42",
+  "verdict": "confirmed",
+  "evidence": [
+   "lib/ceedling/installation.rb:73-77"
+  ],
+  "note": "Claim omits the fallback to unresolved @root when realpath fails."
+ },
+ {
+  "id": "GAP10-43",
+  "verdict": "confirmed",
+  "evidence": [
+   "lib/ceedling/release_invoker/release_build_executor.rb:91-107",
+   "phase1-gaps/gap-10/release/results.txt"
+  ],
+  "note": ""
+ },
+ {
+  "id": "GAP10-44",
+  "verdict": "confirmed",
+  "evidence": [
+   "lib/ceedling/config/configurator_builder.rb:359-362",
+   "phase1-gaps/gap-10/release/results.txt"
+  ],
+  "note": "The ~ line in results.txt is a sed rewrite of the real $HOME path."
+ },
+ {
+  "id": "GAP10-45",
+  "verdict": "confirmed",
+  "evidence": [
+   "lib/ceedling/filesystem/file_path_utils.rb:193-196",
+   "lib/ceedling/config/configurator_builder.rb:432"
+  ],
+  "note": "The subdirectory is the source file's own directory; a source dir named c would give out/c."
+ },
+ {
+  "id": "GAP10-46",
+  "verdict": "confirmed",
+  "evidence": [
+   "lib/ceedling/filename_extension.rb:40-45",
+   "lib/ceedling/filesystem/file_path_utils.rb:187,195,205,263,378,382"
+  ],
+  "note": "Doc lines 80-87 only loosely support the claim; code supports it fully."
+ },
+ {
+  "id": "GAP10-47",
+  "verdict": "partly",
+  "evidence": [
+   "phase1-gaps/gap-10/cli/proj/build/test/runners/test/unit/test_foo_runner.c:4-6"
+  ],
+  "note": "Behaviour holds. Cited evidence file results_include_min.txt does not hold the runner head, and no script creates project.runner.yml or include/sub/missing.h."
+ },
+ {
+  "id": "GAP10-48",
+  "verdict": "partly",
+  "evidence": [
+   "phase1-gaps/gap-10/collide/excerpts/v4_compile_command.txt",
+   "lib/ceedling/test_invoker/test_search_paths.rb:41-48,66-73",
+   "lib/ceedling/includes/include_pathinator.rb:145-154"
+  ],
+  "note": "Core right. ':paths :test and :source directories are not on it' holds only when the test directory has no header; a :test directory holding a header is added. Real list also holds TEST_INCLUDE_PATH, :support, :libraries and test-toolchain include entries."
+ },
+ {
+  "id": "GAP10-49",
+  "verdict": "partly",
+  "evidence": [
+   "phase1-gaps/gap-10/cli/results.txt",
+   "lib/ceedling/test_invoker/test_search_paths.rb:66-73"
+  ],
+  "note": "Output paths right (build/test/out/<test>/_t_/ not build/tests/out). 'Test directories are not -I entries' is overstated: a :test directory holding headers is on -I."
+ },
+ {
+  "id": "GAP10-50",
+  "verdict": "confirmed",
+  "evidence": [
+   "lib/ceedling/tools/tool_validator.rb:41-52",
+   "lib/ceedling/tools/tool_validator.rb:122-133"
+  ],
+  "note": "'Checked as a file' is loose: File.exist? also passes a directory, and candidates are tried with configured extensions."
+ },
+ {
+  "id": "GAP10-51",
+  "verdict": "confirmed",
+  "evidence": [
+   "plugins/compile_commands_json_db/lib/compile_commands_json_db.rb:24,36,55-61",
+   "phase1-gaps/gap-10/collide/excerpts/v1cc_compile_commands_keys.txt"
+  ],
+  "note": ""
+ },
+ {
+  "id": "GAP10-52",
+  "verdict": "confirmed",
+  "evidence": [
+   "plugins/cppcheck/cppcheck.rake:44",
+   "lib/ceedling/filesystem/file_finder.rb:237-239,468-480",
+   "lib/ceedling/filesystem/file_finder_helper.rb:33-46"
+  ],
+  "note": ""
+ },
+ {
+  "id": "GAP10-53",
+  "verdict": "confirmed",
+  "evidence": [
+   "plugins/cppcheck/lib/cppcheck_constants.rb:13-15",
+   "plugins/bullseye/lib/bullseye_constants.rb:13-22",
+   "plugins/gcov/lib/gcov_constants.rb:18-22"
+  ],
+  "note": "The <build root> wording is in the Gcov docs; Cppcheck and Bullseye docs have none."
+ },
+ {
+  "id": "GAP10-54",
+  "verdict": "confirmed",
+  "evidence": [
+   "plugins/cppcheck/lib/cppcheck_reports.rb:41-46,106-108,125-127,138-141"
+  ],
+  "note": "ext is Rake's String#ext; not traced in this repo."
+ },
+ {
+  "id": "GAP10-55",
+  "verdict": "confirmed",
+  "evidence": [
+   "plugins/cppcheck/lib/cppcheck.rb:59-68,321-327"
+  ],
+  "note": "Not exercised by a run."
+ },
+ {
+  "id": "GAP10-56",
+  "verdict": "partly",
+  "evidence": [
+   "plugins/cppcheck/lib/cppcheck.rb:248-273",
+   "lib/ceedling/filesystem/file_path_collection_utils.rb:32-41,80-96,142-153"
+  ],
+  "note": "Core right. 'A path that does not exist logs a warning' is wrong as a general statement: collect_paths drops a plain nonexistent entry before collect_suppressions sees it. The warning can fire only for a nonexistent entry ending in /** or /*, where with_parents re-adds the base."
+ },
+ {
+  "id": "GAP10-57",
+  "verdict": "confirmed",
+  "evidence": [
+   "plugins/bullseye/lib/bullseye_constants.rb:35",
+   "plugins/bullseye/lib/bullseye.rb:36-38,445-451"
+  ],
+  "note": "Bullseye relative storage is asserted only in comments and docs; claim says not run."
+ },
+ {
+  "id": "GAP10-58",
+  "verdict": "confirmed",
+  "evidence": [
+   "plugins/bullseye/lib/bullseye.rb:236-246",
+   "plugins/gcov/lib/gcov.rb:167-176",
+   "lib/ceedling/filesystem/file_path_utils.rb:633-639"
+  ],
+  "note": "Subpath is encoded by BuildSubpath, so 'the source's own directory' is approximate. Gcov also passes collection_paths_include."
+ },
+ {
+  "id": "GAP10-59",
+  "verdict": "confirmed",
+  "evidence": [
+   "plugins/gcov/lib/gcovr_reportinator.rb:508-541",
+   "phase1-gaps/gap-10/gcov_pattern_check.txt"
+  ],
+  "note": "Saved check file does not show the script; rerun by verifier in Ruby and Python matches."
+ },
+ {
+  "id": "GAP10-60",
+  "verdict": "confirmed",
+  "evidence": [
+   "plugins/gcov/lib/reportgenerator_reportinator.rb:329-337,184-188,357-372"
+  ],
+  "note": ""
+ },
+ {
+  "id": "GAP10-61",
+  "verdict": "confirmed",
+  "evidence": [
+   "phase1-gaps/gap-10/collide/excerpts/v1_a_impl.c:4",
+   "lib/ceedling/generators/partial_source_writer.rb:113-130"
+  ],
+  "note": "Core holds. Only imprecision: full build path of the generated file is longer than a/ceedling_partial_util_impl.c."
+ }
+]

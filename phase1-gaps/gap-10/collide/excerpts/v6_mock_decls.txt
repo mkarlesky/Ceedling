@@ -1,0 +1,6 @@
+proj/v6_mock_both/build/test/mocks/test/test_collide/_t_/a/Mockceedling_partial_util_interface.h:24:void a_Mockceedling_partial_util_interface_Init(void);
+proj/v6_mock_both/build/test/mocks/test/test_collide/_t_/a/Mockceedling_partial_util_interface.h:25:void a_Mockceedling_partial_util_interface_Destroy(void);
+proj/v6_mock_both/build/test/mocks/test/test_collide/_t_/a/Mockceedling_partial_util_interface.h:26:void a_Mockceedling_partial_util_interface_Verify(void);
+proj/v6_mock_both/build/test/mocks/test/test_collide/_t_/b/Mockceedling_partial_util_interface.h:24:void b_Mockceedling_partial_util_interface_Init(void);
+proj/v6_mock_both/build/test/mocks/test/test_collide/_t_/b/Mockceedling_partial_util_interface.h:25:void b_Mockceedling_partial_util_interface_Destroy(void);
+proj/v6_mock_both/build/test/mocks/test/test_collide/_t_/b/Mockceedling_partial_util_interface.h:26:void b_Mockceedling_partial_util_interface_Verify(void);

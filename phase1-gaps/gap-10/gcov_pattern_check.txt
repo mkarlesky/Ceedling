@@ -1,0 +1,4 @@
+test/test_a.c: true
+drivers/legacy/test/test_wire.c: true
+latest/test_x.c: false
+src/test_helpers/util.c: false

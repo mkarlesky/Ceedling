@@ -1,0 +1,81 @@
+=== v1_public_same_static
+partials/test/test_collide/_t_/a/ceedling_partial_util_impl.c
+partials/test/test_collide/_t_/a/ceedling_partial_util_impl.h
+partials/test/test_collide/_t_/b/ceedling_partial_util_impl.c
+partials/test/test_collide/_t_/b/ceedling_partial_util_impl.h
+=== v4_public_same_var
+partials/test/test_collide/_t_/a/ceedling_partial_util_impl.c
+partials/test/test_collide/_t_/a/ceedling_partial_util_impl.h
+partials/test/test_collide/_t_/a/ceedling_partial_util_types.h
+partials/test/test_collide/_t_/b/ceedling_partial_util_impl.c
+partials/test/test_collide/_t_/b/ceedling_partial_util_impl.h
+partials/test/test_collide/_t_/b/ceedling_partial_util_types.h
+=== v6_mock_both
+mocks/test/test_collide/_t_/a/Mockceedling_partial_util_interface.c
+mocks/test/test_collide/_t_/a/Mockceedling_partial_util_interface.h
+mocks/test/test_collide/_t_/b/Mockceedling_partial_util_interface.c
+mocks/test/test_collide/_t_/b/Mockceedling_partial_util_interface.h
+partials/test/test_collide/_t_/a/ceedling_partial_util_interface.h
+partials/test/test_collide/_t_/b/ceedling_partial_util_interface.h
+
+=== v1 a/impl.h + b/impl.h
+#ifndef GENB59956D4_A_CEEDLING_PARTIAL_UTIL_IMPL_H_CEEDLING
+#define GENB59956D4_A_CEEDLING_PARTIAL_UTIL_IMPL_H_CEEDLING
+
+#define A_UTIL_H
+
+int a_pub(int x);
+
+#endif // GENB59956D4_A_CEEDLING_PARTIAL_UTIL_IMPL_H_CEEDLING
+
+#ifndef GEN7118F419_B_CEEDLING_PARTIAL_UTIL_IMPL_H_CEEDLING
+#define GEN7118F419_B_CEEDLING_PARTIAL_UTIL_IMPL_H_CEEDLING
+
+#define B_UTIL_H
+
+int b_pub(int x);
+
+#endif // GEN7118F419_B_CEEDLING_PARTIAL_UTIL_IMPL_H_CEEDLING
+
+=== v4 types.h a, b
+#ifndef GEN58D72AD2_A_CEEDLING_PARTIAL_UTIL_TYPES_H_CEEDLING
+#define GEN58D72AD2_A_CEEDLING_PARTIAL_UTIL_TYPES_H_CEEDLING
+
+#define A_UTIL_H
+
+typedef struct { int count; } ceedling_partial_util_s_ctx_t;
+
+#endif // GEN58D72AD2_A_CEEDLING_PARTIAL_UTIL_TYPES_H_CEEDLING
+
+#ifndef GEN5C397C12_B_CEEDLING_PARTIAL_UTIL_TYPES_H_CEEDLING
+#define GEN5C397C12_B_CEEDLING_PARTIAL_UTIL_TYPES_H_CEEDLING
+
+#define B_UTIL_H
+
+typedef struct { int count; } ceedling_partial_util_s_ctx_t;
+
+#endif // GEN5C397C12_B_CEEDLING_PARTIAL_UTIL_TYPES_H_CEEDLING
+
+=== v6 mock header decls
+proj/v6_mock_both/build/test/mocks/test/test_collide/_t_/a/Mockceedling_partial_util_interface.h:5:#include "unity.h"
+proj/v6_mock_both/build/test/mocks/test/test_collide/_t_/a/Mockceedling_partial_util_interface.h:6:#include "a/ceedling_partial_util_interface.h"
+proj/v6_mock_both/build/test/mocks/test/test_collide/_t_/a/Mockceedling_partial_util_interface.h:24:void a_Mockceedling_partial_util_interface_Init(void);
+proj/v6_mock_both/build/test/mocks/test/test_collide/_t_/a/Mockceedling_partial_util_interface.h:25:void a_Mockceedling_partial_util_interface_Destroy(void);
+proj/v6_mock_both/build/test/mocks/test/test_collide/_t_/a/Mockceedling_partial_util_interface.h:26:void a_Mockceedling_partial_util_interface_Verify(void);
+proj/v6_mock_both/build/test/mocks/test/test_collide/_t_/b/Mockceedling_partial_util_interface.h:5:#include "unity.h"
+proj/v6_mock_both/build/test/mocks/test/test_collide/_t_/b/Mockceedling_partial_util_interface.h:6:#include "b/ceedling_partial_util_interface.h"
+proj/v6_mock_both/build/test/mocks/test/test_collide/_t_/b/Mockceedling_partial_util_interface.h:24:void b_Mockceedling_partial_util_interface_Init(void);
+proj/v6_mock_both/build/test/mocks/test/test_collide/_t_/b/Mockceedling_partial_util_interface.h:25:void b_Mockceedling_partial_util_interface_Destroy(void);
+proj/v6_mock_both/build/test/mocks/test/test_collide/_t_/b/Mockceedling_partial_util_interface.h:26:void b_Mockceedling_partial_util_interface_Verify(void);
+=== v6 interface.h a
+#ifndef GENB5E1BB9B_A_CEEDLING_PARTIAL_UTIL_INTERFACE_H_CEEDLING
+#define GENB5E1BB9B_A_CEEDLING_PARTIAL_UTIL_INTERFACE_H_CEEDLING
+
+#define A_UTIL_H
+
+int a_pub(int x);
+
+#endif // GENB5E1BB9B_A_CEEDLING_PARTIAL_UTIL_INTERFACE_H_CEEDLING
+
+
+=== -I list v1 compile

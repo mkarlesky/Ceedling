@@ -1,0 +1,11 @@
+{"verdicts":[
+{"id":"GAP10-11","verdict":"confirmed","evidence":["lib/ceedling/partials/partializer_config.rb:257-270"],"note":"Validation and key logic as stated."},
+{"id":"GAP10-12","verdict":"confirmed","evidence":["lib/ceedling/filesystem/file_path_utils.rb:496-503","lib/ceedling/ceedling.h:40","lib/ceedling/ceedling.h:68"],"note":"Cited excerpt v1_a_impl.h:1 is only a guard; the link and compile logs show the directory."},
+{"id":"GAP10-13","verdict":"confirmed","evidence":["lib/ceedling/filesystem/file_path_utils.rb:305-307"],"note":"Layout shown in logs."},
+{"id":"GAP10-14","verdict":"confirmed","evidence":["phase1-gaps/gap-10/collide/logs/v1b_public_calls_static.excerpt.txt"],"note":"That run exited 1 on a multiple definition, but the quoted link command is as described."},
+{"id":"GAP10-15","verdict":"confirmed","evidence":["phase1-gaps/gap-10/collide/logs/v9_unqualified_ambiguous.excerpt.txt","lib/ceedling/filesystem/file_finder_helper.rb:33-47"],"note":"The quoted docs sentence is at configuration.md:48, not the cited 42-45."},
+{"id":"GAP10-16","verdict":"partly","evidence":["lib/ceedling/rakefiles/tests/tasks_tests.rake:49-56","phase1-gaps/gap-10/cli/results.txt"],"note":"test:path[Test] found none (case) was never run in run_cli.sh/results.txt; it follows from the code."},
+{"id":"GAP10-17","verdict":"partly","evidence":["lib/ceedling/rakefiles/tests/tasks_tests.rake:37-47","phase1-gaps/gap-10/cli/results.txt"],"note":"test:path[gap-10] found nothing was not in run_cli.sh; inferred from code and relative paths."},
+{"id":"GAP10-18","verdict":"confirmed","evidence":["phase1-gaps/gap-10/cli/results.txt","lib/ceedling/filesystem/file_finder.rb:80-83","lib/ceedling/filesystem/path_matcher.rb:20-33"],"note":"Backslash form passed single-quoted, reaches Ceedling."},
+{"id":"GAP10-19","verdict":"confirmed","evidence":["plugins/bullseye/bullseye.rake:70-90","plugins/gcov/gcov.rake:70-90"],"note":"Pattern task differs only in Ruby syntax."},
+{"id":"GAP10-20","verdict":"confirmed","evidence":["lib/ceedling/rakefiles/base/tasks_filesystem.rake:72-80","phase1-gaps/gap-10/deps/cli_tasks.txt"],"note":"Cited path phase1-gaps/gap-10/cli_tasks.txt does not exist; file is deps/cli_tasks.txt, and no script generates it."}]}

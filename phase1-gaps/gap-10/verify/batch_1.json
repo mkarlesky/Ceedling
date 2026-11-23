@@ -1,0 +1,182 @@
+[
+ {
+  "id": "GAP10-01",
+  "kind": "test",
+  "title": "Two same-named _AT Partials with the same static name build and pass",
+  "claim": "Verdict: kept. One test holds `#include TEST_PARTIAL_PUBLIC_MODULE_AT(a, util)` and `#include TEST_PARTIAL_PUBLIC_MODULE_AT(b, util)`. Each `util.c` defines a static `util_helper` and a public function (`a_pub`, `b_pub`). The build compiles, links and passes (TESTED 1, PASSED 1). Ceedling writes `a/ceedling_partial_util_impl.{c,h}` and `b/ceedling_partial_util_impl.{c,h}` below `build/test/partials/test/test_collide/_t_/`. Their include guards differ (`GENB59956D4_A_CEEDLING_PARTIAL_UTIL_IMPL_H_CEEDLING` and `GEN7118F419_B_...`). PUBLIC mode leaves the static out of the generated source, so the shared static name never meets itself.",
+  "evidence": [
+   "phase1-gaps/gap-10/collide/gen.sh (variant v1_public_same_static)",
+   "phase1-gaps/gap-10/collide/results.txt (v1_public_same_static exit=0)",
+   "phase1-gaps/gap-10/collide/logs/v1_public_same_static.excerpt.txt (TESTED, PASSED)",
+   "phase1-gaps/gap-10/collide/excerpts/v1_a_impl.h:1",
+   "phase1-gaps/gap-10/collide/excerpts/v1_b_impl.h:1",
+   "phase1-gaps/gap-10/collide/excerpts/v1_a_impl.c:1-5",
+   "lib/ceedling/filesystem/file_path_utils.rb:496-503"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-02",
+  "kind": "test",
+  "title": "Same-named public or selected functions in two _AT modules fail at link",
+  "claim": "Verdict: kept (inherent). Three variants fail with `multiple definition` at link, never at compile. (v2) both `util.c` define a public `util_pub`. (v1b) both public functions call `util_helper` and the test selects it with `TEST_PARTIAL_CONFIG_AT` for each module. (v3) both modules use `TEST_PARTIAL_PRIVATE_MODULE_AT`, which promotes the same-named statics. The fixture comment says the same. Directory qualification keeps the generated files apart but cannot keep the function names apart.",
+  "evidence": [
+   "phase1-gaps/gap-10/collide/results.txt (v1b, v2, v3 exit=1)",
+   "phase1-gaps/gap-10/collide/logs/v2_public_same_pub.excerpt.txt",
+   "phase1-gaps/gap-10/collide/logs/v1b_public_calls_static.excerpt.txt",
+   "phase1-gaps/gap-10/collide/logs/v3_private_same_static.excerpt.txt",
+   "assets/fixtures/same_named_modules/src/drivers/uart/config.c:3-5"
+  ],
+  "issues": [],
+  "severity": "low",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-03",
+  "kind": "test",
+  "title": "A variable name used by both same-named modules breaks compile or link",
+  "claim": "Verdict: kept (inherent). When both `a/util.c` and `b/util.c` hold `static struct { int count; } s_ctx;`, the test fails to compile with `conflicting types for 'ceedling_partial_util_s_ctx_t'` and `conflicting types for 's_ctx'`. Both types headers (`a/` and `b/`) write `typedef struct { int count; } ceedling_partial_util_s_ctx_t;`. With a plain `static int s_count;` in both (no type) the build compiles and fails at link with `multiple definition`. With distinct variable names (`a_ctx`, `b_ctx`) it builds and passes. So the module-name-only type name collides only when the variable name also collides, and that variable collides without the type.",
+  "evidence": [
+   "phase1-gaps/gap-10/collide/results.txt (v4, v7 exit=1; v5 exit=0)",
+   "phase1-gaps/gap-10/collide/logs/v4_public_same_var.excerpt.txt",
+   "phase1-gaps/gap-10/collide/logs/v7_public_same_plain_var.excerpt.txt",
+   "phase1-gaps/gap-10/collide/logs/v5_public_distinct_var.excerpt.txt",
+   "phase1-gaps/gap-10/collide/excerpts/v4_a_types.h:6",
+   "phase1-gaps/gap-10/collide/excerpts/v4_b_types.h:6",
+   "lib/ceedling/partials/partials.rb:93-94"
+  ],
+  "issues": [],
+  "severity": "low",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-04",
+  "kind": "test",
+  "title": "Mock Partials of same-named modules stay apart only through :mock_name_include_folder",
+  "claim": "Verdict: kept (default on). `MOCK_PARTIAL_PUBLIC_MODULE_AT(a, util)` and `(b, util)` in one test build and pass. CMock names the lifecycle functions `a_Mockceedling_partial_util_interface_Init` and `b_...`, and the runner calls both. With `:cmock` ↳ `:mock_name_include_folder: FALSE` the same test fails at link with `multiple definition of Mockceedling_partial_util_interface_Init`, `_Verify` and `_Destroy`. The setting defaults to true in Ceedling and to false in CMock.",
+  "evidence": [
+   "phase1-gaps/gap-10/collide/results.txt (v6 exit=0, v6b exit=1)",
+   "phase1-gaps/gap-10/collide/excerpts/v6_mock_decls.txt",
+   "phase1-gaps/gap-10/collide/excerpts/v6_runner_head.c:33-34",
+   "phase1-gaps/gap-10/collide/logs/v6b_mock_both_no_folder.excerpt.txt",
+   "lib/ceedling/defaults.rb:409",
+   "vendor/cmock/lib/cmock_config.rb:18"
+  ],
+  "issues": [],
+  "severity": "low",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-05",
+  "kind": "promise",
+  "title": "The module name in generated Partial type names carries no directory",
+  "claim": "Verdict: kept. `Partials.type_name` folds `File.basename(module_name)`, so modules `a/util` and `b/util` both give `ceedling_partial_util_<variable>_t`. The experiment shows the same typedef name in both generated types headers. `PARTIAL_TYPE(util, s_ctx)` therefore cannot say which module it means.",
+  "evidence": [
+   "docs/mkdocs/testing-guide/partials/variables.md:279",
+   "docs/mkdocs/reference/partials-macros.md:112-113",
+   "lib/ceedling/partials/partials.rb:86-94",
+   "lib/ceedling/ceedling.h:32-33",
+   "phase1-gaps/gap-10/collide/excerpts/v4_a_types.h:6",
+   "phase1-gaps/gap-10/collide/excerpts/v4_b_types.h:6"
+  ],
+  "issues": [],
+  "severity": "low",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-06",
+  "kind": "promise",
+  "title": "A character a C identifier cannot hold becomes an underscore in Partial type names",
+  "claim": "Verdict: kept. `CIdentifier.fold` replaces each `\\W` character with `_`, one for one, and `Partials.type_name` applies it to the module's basename. `PARTIAL_TYPE` and `PARTIAL_LOCAL_TYPE` paste their arguments as tokens, so a test author writes the folded spelling (`my_sensor`), as the docs say.",
+  "evidence": [
+   "docs/mkdocs/testing-guide/partials/variables.md:279-282",
+   "docs/mkdocs/reference/partials-macros.md:112-113",
+   "lib/ceedling/c_identifier.rb:17-19",
+   "lib/ceedling/partials/partials.rb:93-94",
+   "lib/ceedling/ceedling.h:32-33"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-07",
+  "kind": "promise",
+  "title": "A promoted function-scoped static is named from the function and variable, never the module",
+  "claim": "Verdict: kept. The promoted name is `partial_<function>_<variable>` and carries no module part. File-scoped statics keep their own names and are declared `extern` in `_impl.h`. The docs promise uniqueness only among functions of one module. Two modules with a same-named function cannot be in one test in any case.",
+  "evidence": [
+   "docs/mkdocs/testing-guide/partials/variables.md:126-140",
+   "docs/mkdocs/reference/partials-macros.md:78-90",
+   "lib/ceedling/partials/partializer_helper.rb:299-301",
+   "lib/ceedling/ceedling.h:25",
+   "phase1-gaps/gap-10/collide/excerpts/v4_a_impl.h:10"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-08",
+  "kind": "defect",
+  "title": "A Partial module name that is a predefined macro is replaced before it names the file",
+  "claim": "Verdict: broken. In a GCC build the compiler predefines `unix` as 1. A test with `#include TEST_PARTIAL_PUBLIC_MODULE(unix)` and a `unix.c` module preprocesses to `#include \"ceedling_partial_1_impl.h\"`. Ceedling reads the directive as written and generates `ceedling_partial_unix_impl.{c,h}`. It also writes an empty `ceedling_partial_1_impl.h`. The test links without the module and fails with `undefined reference to 'unix_pub'`, under a notice that blames missing `#include` lines. `__PARTIALS_EXPAND(module)` expands the argument, and `_validate_module!` checks spelling only. This is the mechanism of #1460, which names the directory argument. The `_AT` module argument passes through `__PARTIALS_JOIN`, whose indirection also expands macros. That path was inferred and not built.",
+  "evidence": [
+   "phase1-gaps/gap-10/collide/results.txt (v8_module_named_unix exit=1)",
+   "phase1-gaps/gap-10/collide/logs/v8_module_named_unix.excerpt.txt",
+   "phase1-gaps/gap-10/collide/excerpts/v8_partials_dir.txt",
+   "phase1-gaps/gap-10/collide/excerpts/v8_ceedling_partial_1_impl.h:1",
+   "phase1-gaps/gap-10/collide/excerpts/v8_preprocessed_test_head.c:3",
+   "lib/ceedling/ceedling.h:21-22",
+   "lib/ceedling/ceedling.h:40",
+   "lib/ceedling/partials/partializer_config.rb:276-300"
+  ],
+  "issues": [],
+  "severity": "medium",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-09",
+  "kind": "mechanism",
+  "title": "Generated Partial headers include their siblings by bare filename",
+  "claim": "Verdict: kept, by the compiler's includer-directory rule. `a/ceedling_partial_util_impl.h` holds `#include \"ceedling_partial_util_types.h\"` and `a/ceedling_partial_util_impl.c` holds `#include \"ceedling_partial_util_impl.h\"`, with no directory. The test compile puts both `-I build/.../_t_/a` and `-I build/.../_t_/b` on the command line. Each bare include finds its own sibling only because GCC checks the includer's directory before the `-I` list. A resolver that skips the includer's directory would pick the first `-I` entry (`a/`) for `b/`'s include.",
+  "evidence": [
+   "phase1-gaps/gap-10/collide/excerpts/v4_a_impl.h:6",
+   "phase1-gaps/gap-10/collide/excerpts/v1_a_impl.c:2",
+   "phase1-gaps/gap-10/collide/excerpts/v4_compile_command.txt",
+   "lib/ceedling/generators/partial_header_writer.rb:41-50",
+   "lib/ceedling/generators/partial_source_writer.rb:59-63"
+  ],
+  "issues": [
+   "1464"
+  ],
+  "severity": "low",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-10",
+  "kind": "test",
+  "title": "The runner of a test naming two same-named _AT Partials includes one impl header, by bare name",
+  "claim": "Verdict: partly kept (observed, cause not traced). The test names `a/ceedling_partial_util_impl.h` and `b/ceedling_partial_util_impl.h`. Its generated runner holds one `#include \"ceedling_partial_util_impl.h\"` with no directory. The bare name resolves to `a/` by `-I` order. The test passes, since the runner needs neither header. I did not trace which step collapses the two includes. The runner spelling comes from `include.include_path || include.filename`.",
+  "evidence": [
+   "phase1-gaps/gap-10/collide/excerpts/v1_runner_head.c:5",
+   "phase1-gaps/gap-10/collide/gen.sh (variant v1_public_same_static)",
+   "lib/ceedling/generators/generator_test_runner.rb:56-62",
+   "lib/ceedling/test_invoker/test_runner_generatinator.rb:114-137"
+  ],
+  "issues": [],
+  "severity": "low",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ }
+]

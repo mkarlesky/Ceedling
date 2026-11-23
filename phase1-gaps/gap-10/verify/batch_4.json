@@ -1,0 +1,156 @@
+[
+ {
+  "id": "GAP10-31",
+  "kind": "promise",
+  "title": "files:dependencies lists every library and executable path, built or not",
+  "claim": "Verdict: kept. The task prints the static libraries, dynamic libraries and executables of every spec. In the experiment it listed `dependencies/Vend/libvend.a` although nothing built it.",
+  "evidence": [
+   "docs/mkdocs/plugins/dependencies.md:241-243",
+   "plugins/dependencies/dependencies.rake:122-130",
+   "phase1-gaps/gap-10/deps/results.txt"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-32",
+  "kind": "promise",
+  "title": "Mixin names resolve through user load paths, the project file's directory, then Unity's targets",
+  "claim": "Verdict: kept. `Composinator#loadinate` appends `File.dirname(project_filepath)` and the built-in Unity targets directory to the user load paths and deduplicates by expanded path. `BUILTIN_MIXIN_LOAD_PATHS` holds the Unity `test/targets` directory.",
+  "evidence": [
+   "docs/mkdocs/configuration/mixins.md:402-405",
+   "docs/mkdocs/configuration/mixins.md:488-498",
+   "bin/composinator.rb:30-34",
+   "bin/mixins.rb:9"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-33",
+  "kind": "promise",
+  "title": "Mixin and mixin-variable file paths are relative to the working directory",
+  "claim": "Verdict: kept. Filepaths go to `File.exist?` as written, so they resolve against the working directory. The mixin directory fallback uses the project file's own directory.",
+  "evidence": [
+   "docs/mkdocs/configuration/mixins.md:414",
+   "docs/mkdocs/configuration/mixins.md:439-440",
+   "bin/mixin_resolvinator.rb:62-70",
+   "bin/mixin_resolvinator.rb:93-96",
+   "bin/composinator.rb:32"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-34",
+  "kind": "promise",
+  "title": "A mixin simple name is told from a filepath by extension or the forward slash only",
+  "claim": "Verdict: untestable here (Windows). `PathValidator#filepath?` returns true for a value with an extension or one containing `File::SEPARATOR`, which is `/` on every platform. The docs say \"no path separator\" and the project docs accept `\\`. Whether a Windows `--mixin bar\\base` (no extension) reaches this test unstandardized was not traced.",
+  "evidence": [
+   "docs/mkdocs/configuration/mixins.md:348-350",
+   "bin/path_validator.rb:33-36"
+  ],
+  "issues": [],
+  "severity": "low",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-35",
+  "kind": "promise",
+  "title": "A mixin's list entries land before the base list, except tool arguments",
+  "claim": "Verdict: kept. `RecursiveMerger` builds `mixin_val + config_val` for lists and `config_val + mixin_val` for `:tools` ↳ `<tool>` ↳ `:arguments`. A higher-priority mixin's `:paths` entries therefore come first. Search order inside the merged list is not changed afterwards.",
+  "evidence": [
+   "docs/mkdocs/configuration/mixins.md:96-120",
+   "docs/mkdocs/configuration/mixins.md:296-305",
+   "bin/recursive_merger.rb:81-92",
+   "bin/recursive_merger.rb:126-128"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-36",
+  "kind": "promise",
+  "title": "Mixin load paths are searched top-down and each path tries every YAML extension",
+  "claim": "Verdict: kept. `load_paths.product(yaml_extensions)` yields every extension of the first path before the next path.",
+  "evidence": [
+   "docs/mkdocs/configuration/mixins.md:478-484",
+   "bin/mixin_resolvinator.rb:108-112"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-37",
+  "kind": "test",
+  "title": "A test suite needs :paths :include and/or TEST_INCLUDE_PATH, and no :include entry is required",
+  "claim": "Verdict: kept. A project with no `:paths` ↳ `:include` passes validation. A test using `TEST_INCLUDE_PATH(include)` built and passed. The same project without the macro stopped with `Found no file `foo.h` in search paths`.",
+  "evidence": [
+   "docs/mkdocs/configuration/project-file.md:75-80",
+   "phase1-gaps/gap-10/cli/results_include_min.txt",
+   "lib/ceedling/config/configurator_setup.rb:117-119"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-38",
+  "kind": "test",
+  "title": "A release build needs :paths :test although the project file docs list only :build_root and :paths :source",
+  "claim": "Verdict: broken. A project with `:release_build: TRUE`, `:project` ↳ `:build_root` and `:paths` ↳ `:source`, and no `:paths` ↳ `:test`, stops with `Required config file entry :paths ↳ :test does not exist.` The check lists `:paths` ↳ `:test` for every build.",
+  "evidence": [
+   "docs/mkdocs/configuration/project-file.md:82-85",
+   "lib/ceedling/config/configurator_setup.rb:117-119",
+   "phase1-gaps/gap-10/release/results_min_release.txt"
+  ],
+  "issues": [],
+  "severity": "low",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-39",
+  "kind": "promise",
+  "title": "Second-tier keys ending in _path or _paths get Ruby expansion and standard separators",
+  "claim": "Verdict: kept. `eval_paths` expands every second-tier key that matches `/_path(s)?$/` under each top-level section, and `standardize_convention_paths` standardizes the same set. `:project` ↳ `:build_root`, :release_build ↳ :artifacts` and `:paths`/`:files` are handled by their own lines.",
+  "evidence": [
+   "docs/mkdocs/configuration/project-file.md:200-205",
+   "lib/ceedling/config/configurator.rb:368-376",
+   "lib/ceedling/config/configurator.rb:689-691",
+   "lib/ceedling/config/configurator.rb:702-706"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-40",
+  "kind": "promise",
+  "title": "Which Ceedling picks WHICH_CEEDLING, then :which_ceedling, then vendor/ceedling, then the gem, with ~ expanded",
+  "claim": "Verdict: kept. `InstallationSelector#select` takes the first of the environment variable, the config value and `vendor/ceedling` and falls back to the launcher's own root. `validate` standardizes the value, which expands `~`. Every experiment log here shows `Launching Ceedling from /home/user/Ceedling/` from `:which_ceedling`.",
+  "evidence": [
+   "docs/mkdocs/configuration/which-ceedling.md:40-56",
+   "bin/installation_selector.rb:21-30",
+   "bin/installation_selector.rb:61-72",
+   "phase1-gaps/gap-10/collide/logs/v1_public_same_static.excerpt.txt (first line)"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ }
+]

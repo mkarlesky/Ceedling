@@ -1,0 +1,41 @@
+### test:test_foo.c
+ > Launching Ceedling from /home/user/Ceedling/
+🧨 EXCEPTION: Ambiguous file reference 'test_foo.c' found. Include more trailing path to distinguish among: test/integration/test_foo.c, test/unit/test_foo.c, test/unit_extra/test_foo.c
+### test:unit/test_foo.c
+ > Launching Ceedling from /home/user/Ceedling/
+TESTED:  1
+`gcc -I"include" -I"build/vendor/unity/src" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "test/unit/test_foo.c" -o "build/test/out/test/unit/test_foo/_t_/test/unit/test_foo.o" -MMD -MF "build/test/dependencies/test/unit/test_foo/_t_/test/unit/test_foo.d"`
+### test:unit\test_foo.c
+ > Launching Ceedling from /home/user/Ceedling/
+TESTED:  1
+### test:path[unit]
+ > Launching Ceedling from /home/user/Ceedling/
+TESTED:  3
+`gcc -I"include" -I"build/vendor/unity/src" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "test/unit_extra/test_foo.c" -o "build/test/out/test/unit_extra/test_foo/_t_/test/unit_extra/test_foo.o" -MMD -MF "build/test/dependencies/test/unit_extra/test_foo/_t_/test/unit_extra/test_foo.d"`
+### test:path[unit/]
+ > Launching Ceedling from /home/user/Ceedling/
+🪲 ERROR: Found no tests including the given path or path component
+### test:path[nit]
+ > Launching Ceedling from /home/user/Ceedling/
+TESTED:  3
+### test:path[t/in]
+ > Launching Ceedling from /home/user/Ceedling/
+TESTED:  1
+`gcc -I"include" -I"build/vendor/unity/src" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "test/integration/test_foo.c" -o "build/test/out/test/integration/test_foo/_t_/test/integration/test_foo.o" -MMD -MF "build/test/dependencies/test/integration/test_foo/_t_/test/integration/test_foo.d"`
+### test:path[test_foo.c]
+ > Launching Ceedling from /home/user/Ceedling/
+🪲 ERROR: Found no tests including the given path or path component
+### test:path[Test]
+ > Launching Ceedling from /home/user/Ceedling/
+🪲 ERROR: Found no tests including the given path or path component
+### test:path[gap-10]
+ > Launching Ceedling from /home/user/Ceedling/
+🪲 ERROR: Found no tests including the given path or path component
+### test:path[test/unit\]
+ > Launching Ceedling from /home/user/Ceedling/
+### test:pattern[unit/test_foo]
+ > Launching Ceedling from /home/user/Ceedling/
+TESTED:  1
+### test:pattern[^test/unit/]
+ > Launching Ceedling from /home/user/Ceedling/
+TESTED:  1

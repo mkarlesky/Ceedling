@@ -1,0 +1,9 @@
+#ifndef GEN5C397C12_B_CEEDLING_PARTIAL_UTIL_TYPES_H_CEEDLING
+#define GEN5C397C12_B_CEEDLING_PARTIAL_UTIL_TYPES_H_CEEDLING
+
+#define B_UTIL_H
+
+typedef struct { int count; } ceedling_partial_util_s_ctx_t;
+
+#endif // GEN5C397C12_B_CEEDLING_PARTIAL_UTIL_TYPES_H_CEEDLING
+

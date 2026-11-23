@@ -1,0 +1,11 @@
+{"verdicts":[
+{"id":"GAP10-01","verdict":"confirmed","evidence":["phase1-gaps/gap-10/collide/results.txt","phase1-gaps/gap-10/collide/excerpts/v1_a_impl.c:1-5"],"note":"Static variables are not dropped like static functions (v7); claim speaks of the function only."},
+{"id":"GAP10-02","verdict":"confirmed","evidence":["phase1-gaps/gap-10/collide/logs/v2_public_same_pub.excerpt.txt","phase1-gaps/gap-10/collide/logs/v3_private_same_static.excerpt.txt"],"note":"v3 log also shows undefined references to a_pub/b_pub; irrelevant to the claim."},
+{"id":"GAP10-03","verdict":"confirmed","evidence":["phase1-gaps/gap-10/collide/logs/v4_public_same_var.excerpt.txt","lib/ceedling/partials/partials.rb:93-94"],"note":""},
+{"id":"GAP10-04","verdict":"confirmed","evidence":["phase1-gaps/gap-10/collide/excerpts/v6_mock_decls.txt","lib/ceedling/defaults.rb:409","vendor/cmock/lib/cmock_config.rb:18"],"note":"v6b log also shows undefined reference to b_pub_ExpectAndReturn."},
+{"id":"GAP10-05","verdict":"confirmed","evidence":["lib/ceedling/partials/partials.rb:93-94","lib/ceedling/ceedling.h:32-33"],"note":""},
+{"id":"GAP10-06","verdict":"confirmed","evidence":["lib/ceedling/c_identifier.rb:17-19"],"note":""},
+{"id":"GAP10-07","verdict":"confirmed","evidence":["lib/ceedling/partials/partializer_helper.rb:298-301","lib/ceedling/ceedling.h:25"],"note":""},
+{"id":"GAP10-08","verdict":"partly","evidence":["phase1-gaps/gap-10/collide/excerpts/v8_preprocessed_test_head.c:3","lib/ceedling/ceedling.h:14,40","lib/ceedling/partials/partializer_config.rb:276-300"],"note":"Core confirmed. (1) The notice blaming missing #include lines is not in captured evidence because run.sh's grep dropped it. (2) The #1460 reference cannot be checked against the repo."},
+{"id":"GAP10-09","verdict":"confirmed","evidence":["phase1-gaps/gap-10/collide/excerpts/v4_a_impl.h:6","phase1-gaps/gap-10/collide/excerpts/v4_compile_command.txt"],"note":"Resolver-skipping-includer inference is sound but not exercised; #1464 not checkable in repo."},
+{"id":"GAP10-10","verdict":"confirmed","evidence":["phase1-gaps/gap-10/collide/excerpts/v1_runner_head.c:5","lib/ceedling/generators/generator_test_runner.rb:56-60"],"note":"Cause not traced, as the claim says; the -I order for the runner compile was not captured."}]}

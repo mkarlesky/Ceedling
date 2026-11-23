@@ -1,0 +1,3 @@
+ > Launching Ceedling from /home/user/Ceedling/
+🪲 ERROR: Required config file entry :paths ↳ :test does not exist.
+🧨 EXCEPTION: Ceedling configuration failed validation

@@ -1,0 +1,11 @@
+ > Launching Ceedling from /home/user/Ceedling/
+Linking test_collide.out...
+ℹ️ NOTICE: The linker output appears to report missing symbols.
+• This test lacks #include statements corresponding to needed source files (see notes below).
+ℹ️ NOTICE: The linker output appears to report a symbol defined more than once.
+🧨 EXCEPTION: 'Default Test Linker' (gcc) terminated with exit code [1] and output ⏩️
+/home/user/Ceedling/phase1-gaps/gap-10/collide/proj/v3_private_same_static/build/test/partials/test/test_collide/_t_/b/ceedling_partial_util_impl.c:3: multiple definition of `util_helper'; build/test/out/test/test_collide/_t_/a/ceedling_partial_util_impl.o:/home/user/Ceedling/phase1-gaps/gap-10/collide/proj/v3_private_same_static/build/test/partials/test/test_collide/_t_/a/ceedling_partial_util_impl.c:3: first defined here
+/home/user/Ceedling/phase1-gaps/gap-10/collide/proj/v3_private_same_static/test/test_collide.c:9:(.text+0x29): undefined reference to `a_pub'
+/usr/bin/ld: /home/user/Ceedling/phase1-gaps/gap-10/collide/proj/v3_private_same_static/test/test_collide.c:9:(.text+0x57): undefined reference to `b_pub'
+collect2: error: ld returned 1 exit status
+Executed Command: gcc "build/test/out/test/test_collide/_t_/test/test_collide.o" "build/test/out/test/test_collide/_t_/a/ceedling_partial_util_impl.o" "build/test/out/test/test_collide/_t_/b/ceedling_partial_util_impl.o" "build/test/out/test/test_collide/_t_/test_collide_runner.o" "build/test/out/test/test_collide/_t_/unity.o" -o "build/test/out/test/test_collide/_t_/test_collide.out"

@@ -1,0 +1,163 @@
+[
+ {
+  "id": "GAP10-21",
+  "kind": "promise",
+  "title": "files:assembly exists even when assembly support is off",
+  "claim": "Verdict: broken. Both command line pages say the task is only available when assembly support is enabled. The `files` namespace creates a task for each of tests, source, assembly, headers and support unconditionally. With `:test_build` ↳ `:use_assembly: FALSE` and no release assembly, `ceedling files:assembly` runs and prints `Assembly files: None`.",
+  "evidence": [
+   "docs/mkdocs/reference/command-line.md:202-204",
+   "docs/mkdocs/getting-started/command-line.md:361-363",
+   "lib/ceedling/rakefiles/base/tasks_filesystem.rake:93-98",
+   "phase1-gaps/gap-10/cli_tasks.txt"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-22",
+  "kind": "promise",
+  "title": "The Dependencies doc names a files:include task that does not exist",
+  "claim": "Verdict: broken. The doc lists `files:include` as \"Lists every header file Ceedling has found, including those from dependencies\". The core defines `files:header` for that. `ceedling files:include` ends with `Unrecognized build task`. `paths:include` is real.",
+  "evidence": [
+   "docs/mkdocs/plugins/dependencies.md:245-251",
+   "lib/ceedling/rakefiles/base/tasks_filesystem.rake:94-98",
+   "phase1-gaps/gap-10/deps/results.txt",
+   "phase1-gaps/gap-10/cli_tasks.txt"
+  ],
+  "issues": [],
+  "severity": "low",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-23",
+  "kind": "defect",
+  "title": "Dependency include directories and globs are added to the header file collection as literal entries",
+  "claim": "Verdict: defect. `include_files` maps every `:includes` entry, whether a header, a directory or a glob, to a path below the artifact path. `Dependencies#config` and `#add_headers_and_sources` push all of them into `collection_all_headers`. With `:includes: [inc/**, single/one.h]`, `files:header` lists `dependencies/Vend/inc/**` as a header file.",
+  "evidence": [
+   "plugins/dependencies/lib/dependency_spec.rb:103",
+   "plugins/dependencies/lib/dependency_spec.rb:131-133",
+   "plugins/dependencies/lib/dependencies.rb:53-55",
+   "plugins/dependencies/lib/dependencies.rb:146-149",
+   "phase1-gaps/gap-10/cli_tasks.txt",
+   "phase1-gaps/gap-10/deps/gen_deps.sh"
+  ],
+  "issues": [],
+  "severity": "low",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-24",
+  "kind": "promise",
+  "title": "A dependency's :artifact path skips :source and :fetch when :build is left out",
+  "claim": "Verdict: broken. The docs say `:artifact` falls back to `:build`, and `:build` falls back to `:source`, then `:fetch`. The code reads `@paths[:artifact] || @paths[:build] || default_path`. A dependency with only `:source: ext/src` gets build `ext/src` but artifact `dependencies/<name>`. In the build, `:includes: [inc/**]` of such a dependency appears in `paths:include` as `dependencies/Vend/inc`, not `vendor_dep/inc`. A fix changes where artifacts are looked for, so it is a BreakingChanges candidate.",
+  "evidence": [
+   "docs/mkdocs/plugins/dependencies.md:71-80",
+   "plugins/dependencies/lib/dependency_spec.rb:72-75",
+   "phase1-gaps/gap-10/dependencies_paths.txt",
+   "phase1-gaps/gap-10/deps/results.txt",
+   "phase1-gaps/gap-10/cli_tasks.txt"
+  ],
+  "issues": [],
+  "severity": "medium",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-25",
+  "kind": "promise",
+  "title": "dependencies:clean misses a default path that a fetch used",
+  "claim": "Verdict: partly kept. The doc says clean removes \"every one of its working paths\". `working_paths` returns the configured paths only (`@paths` less `:deploy`), and the default `dependencies/<name>` is used only when a path falls back to it. With only `:artifact: out` configured, fetch and source resolve to `dependencies/<name>` while clean removes only `out`. With only `:build: b`, clean removes only `b`. Fetch then sees a non-empty fetch path and skips.",
+  "evidence": [
+   "docs/mkdocs/plugins/dependencies.md:231-233",
+   "plugins/dependencies/lib/dependency_spec.rb:72-85",
+   "plugins/dependencies/lib/dependencies.rb:94-96",
+   "plugins/dependencies/lib/dependencies.rb:194-198",
+   "phase1-gaps/gap-10/dependencies_paths.txt"
+  ],
+  "issues": [],
+  "severity": "medium",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-26",
+  "kind": "promise",
+  "title": "Dependency artifacts resolve against the artifact path, absolute names stand, and ~ expands",
+  "claim": "Verdict: kept. `artifact_at` standardizes the entry, which expands a leading `~`, then keeps an absolute path as written and joins any other below `artifact_path`.",
+  "evidence": [
+   "docs/mkdocs/plugins/dependencies.md:89-91",
+   "plugins/dependencies/lib/dependency_spec.rb:140-144",
+   "lib/ceedling/filesystem/project_paths.rb:44-50",
+   "lib/ceedling/filesystem/project_paths.rb:115-117"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-27",
+  "kind": "promise",
+  "title": "dependencies:deploy copies dynamic libraries and executables beside the release executable by default",
+  "claim": "Verdict: kept. The destination is `spec.deploy_path(File.dirname(PROJECT_RELEASE_BUILD_TARGET))`. The target lies below `<build root>/release/` (for example `build/release/project.out`), not in the artifacts directory.",
+  "evidence": [
+   "docs/mkdocs/plugins/dependencies.md:80",
+   "docs/mkdocs/plugins/dependencies.md:237-240",
+   "plugins/dependencies/lib/dependencies.rb:111",
+   "lib/ceedling/config/configurator_builder.rb:139-148",
+   "phase1-gaps/gap-10/release/results.txt"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-28",
+  "kind": "promise",
+  "title": "Dependency fetch runs in the fetch path and build steps run in the source path",
+  "claim": "Verdict: kept. Fetch steps run inside `spec.fetch_path` after it is created, so a relative archive `:source` is relative to the fetch path. Each build step runs in `spec.source_path`, and the source, build and artifact paths are created first. Both use `WorkingDir.chdir`.",
+  "evidence": [
+   "docs/mkdocs/plugins/dependencies.md:114-115",
+   "docs/mkdocs/plugins/dependencies.md:164-166",
+   "plugins/dependencies/lib/dependencies.rb:194-204",
+   "plugins/dependencies/lib/dependencies.rb:214-220"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-29",
+  "kind": "promise",
+  "title": "Dependency :source artifacts join the include and source collections, not :paths :source",
+  "claim": "Verdict: kept. `add_source_path` appends each `:source` directory to four include-style collections and its C files to `collection_all_source`. It does not touch `collection_paths_source`. The doc promises search paths and release sources only.",
+  "evidence": [
+   "docs/mkdocs/plugins/dependencies.md:208-209",
+   "plugins/dependencies/lib/dependencies.rb:324-338"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-30",
+  "kind": "promise",
+  "title": "A :build_lib static library is built in :build and copied to :artifact when they differ",
+  "claim": "Verdict: kept. The first `:static_libraries` entry is built at `<build path>/<entry>` and copied to `<artifact path>/<entry>` unless the two paths are equal. Object placement is GAP-04's.",
+  "evidence": [
+   "docs/mkdocs/plugins/dependencies.md:273-277",
+   "plugins/dependencies/lib/dependencies.rb:233-250"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ }
+]

@@ -1,0 +1,35 @@
+### default exit=0
+launch lines: 1
+build/artifacts/release/extra.txt
+build/artifacts/release/project.out
+build/cache/.release.dep_cache.json
+build/release/out/src/drv/led.o
+build/release/out/src/main.o
+build/release/project.out
+### rel_dir exit=0
+launch lines: 1
+build/artifacts/release/app.out
+build/artifacts/release/extra.txt
+build/cache/.release.dep_cache.json
+build/release/out/src/drv/led.o
+build/release/out/src/main.o
+build/release/sub/app.out
+### abs exit=0
+launch lines: 1
+build/artifacts/release/app.out
+build/artifacts/release/extra.txt
+build/cache/.release.dep_cache.json
+build/release/out/src/drv/led.o
+build/release/out/src/main.o
+proj/abs_out/app.out
+### home exit=0
+launch lines: 1
+build/artifacts/release/app.out
+build/artifacts/release/extra.txt
+build/cache/.release.dep_cache.json
+build/release/out/src/drv/led.o
+build/release/out/src/main.o
+~/gap10_release_test/app.out
+ > Launching Ceedling from /home/user/Ceedling/
+🪲 ERROR: Required config file entry :paths ↳ :test does not exist.
+🧨 EXCEPTION: Ceedling configuration failed validation

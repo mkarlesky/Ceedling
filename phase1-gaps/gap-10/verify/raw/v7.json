@@ -1,0 +1,1 @@
+{"verdicts": [{"id": "GAP10-61", "verdict": "confirmed", "evidence": ["phase1-gaps/gap-10/collide/excerpts/v1_a_impl.c:4", "lib/ceedling/generators/partial_source_writer.rb:113-130"], "note": "Core holds. Only imprecision: full build path of the generated file is longer than a/ceedling_partial_util_impl.c."}]}

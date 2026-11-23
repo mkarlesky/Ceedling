@@ -1,0 +1,22 @@
+### paths:header
+ > Launching Ceedling from /home/user/Ceedling/
+🧨 EXCEPTION: Unrecognized build task 'paths:header'. List available build tasks with `ceedling help`.
+### paths:include
+ > Launching Ceedling from /home/user/Ceedling/
+ • dependencies/Vend/inc
+ • dependencies/Vend/single
+Path count: 3
+### files:header
+ > Launching Ceedling from /home/user/Ceedling/
+ • dependencies/Vend/inc/**
+ • dependencies/Vend/single/one.h
+File count: 2
+### files:include
+ > Launching Ceedling from /home/user/Ceedling/
+🧨 EXCEPTION: Unrecognized build task 'files:include'. List available build tasks with `ceedling help`.
+### files:assembly
+ > Launching Ceedling from /home/user/Ceedling/
+### files:dependencies
+ - dependencies/Vend/libvend.a
+ > Launching Ceedling from /home/user/Ceedling/
+file count: 1

@@ -1,0 +1,5 @@
+test/test_collide.c | build/test/out/test/test_collide/_t_/test/test_collide.o
+build/test/partials/test/test_collide/_t_/a/ceedling_partial_util_impl.c | build/test/out/test/test_collide/_t_/a/ceedling_partial_util_impl.o
+build/test/partials/test/test_collide/_t_/b/ceedling_partial_util_impl.c | build/test/out/test/test_collide/_t_/b/ceedling_partial_util_impl.o
+build/test/runners/test/test_collide_runner.c | build/test/out/test/test_collide/_t_/test_collide_runner.o
+build/vendor/unity/src/unity.c | build/test/out/test/test_collide/_t_/unity.o

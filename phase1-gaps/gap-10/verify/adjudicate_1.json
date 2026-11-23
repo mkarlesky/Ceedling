@@ -1,0 +1,278 @@
+[
+ {
+  "finding": {
+   "id": "GAP10-08",
+   "kind": "defect",
+   "title": "A Partial module name that is a predefined macro is replaced before it names the file",
+   "claim": "Verdict: broken. In a GCC build the compiler predefines `unix` as 1. A test with `#include TEST_PARTIAL_PUBLIC_MODULE(unix)` and a `unix.c` module preprocesses to `#include \"ceedling_partial_1_impl.h\"`. Ceedling reads the directive as written and generates `ceedling_partial_unix_impl.{c,h}`. It also writes an empty `ceedling_partial_1_impl.h`. The test links without the module and fails with `undefined reference to 'unix_pub'`, under a notice that blames missing `#include` lines. `__PARTIALS_EXPAND(module)` expands the argument, and `_validate_module!` checks spelling only. This is the mechanism of #1460, which names the directory argument. The `_AT` module argument passes through `__PARTIALS_JOIN`, whose indirection also expands macros. That path was inferred and not built.",
+   "evidence": [
+    "phase1-gaps/gap-10/collide/results.txt (v8_module_named_unix exit=1)",
+    "phase1-gaps/gap-10/collide/logs/v8_module_named_unix.excerpt.txt",
+    "phase1-gaps/gap-10/collide/excerpts/v8_partials_dir.txt",
+    "phase1-gaps/gap-10/collide/excerpts/v8_ceedling_partial_1_impl.h:1",
+    "phase1-gaps/gap-10/collide/excerpts/v8_preprocessed_test_head.c:3",
+    "lib/ceedling/ceedling.h:21-22",
+    "lib/ceedling/ceedling.h:40",
+    "lib/ceedling/partials/partializer_config.rb:276-300"
+   ],
+   "issues": [],
+   "severity": "medium",
+   "track_hint": "unknown",
+   "stream": "gap-10"
+  },
+  "verifier": {
+   "id": "GAP10-08",
+   "verdict": "partly",
+   "evidence": [
+    "phase1-gaps/gap-10/collide/excerpts/v8_preprocessed_test_head.c:3",
+    "lib/ceedling/ceedling.h:14,40",
+    "lib/ceedling/partials/partializer_config.rb:276-300"
+   ],
+   "note": "Core confirmed. (1) The notice blaming missing #include lines is not in captured evidence because run.sh's grep dropped it. (2) The #1460 reference cannot be checked against the repo."
+  }
+ },
+ {
+  "finding": {
+   "id": "GAP10-16",
+   "kind": "promise",
+   "title": "test:path matches a substring of the test's directory, not of its whole path",
+   "claim": "Verdict: partly kept. The docs say \"tests whose path contains the given string\". The code tests `File.dirname(test).include?(arg)` on the project-relative test path, with `\\` turned into `/`. With tests in `test/unit`, `test/unit_extra` and `test/integration`: `test:path[unit]` ran 2 tests (substring, so `unit_extra` too), `test:path[nit]` ran 2, `test:path[t/in]` ran 1, `test:path[unit/]` found none (no trailing separator in a dirname), `test:path[test_foo.c]` found none (filename excluded) and `test:path[Test]` found none (case).",
+   "evidence": [
+    "docs/mkdocs/reference/command-line.md:286-292",
+    "docs/mkdocs/getting-started/command-line.md:458-465",
+    "lib/ceedling/rakefiles/tests/tasks_tests.rake:49-56",
+    "phase1-gaps/gap-10/cli/results.txt",
+    "phase1-gaps/gap-10/cli/gen_cli.sh"
+   ],
+   "issues": [],
+   "severity": "low",
+   "track_hint": "unknown",
+   "stream": "gap-10"
+  },
+  "verifier": {
+   "id": "GAP10-16",
+   "verdict": "partly",
+   "evidence": [
+    "lib/ceedling/rakefiles/tests/tasks_tests.rake:49-56",
+    "phase1-gaps/gap-10/cli/results.txt"
+   ],
+   "note": "test:path[Test] found none (case) was never run in run_cli.sh/results.txt; it follows from the code."
+  }
+ },
+ {
+  "finding": {
+   "id": "GAP10-17",
+   "kind": "promise",
+   "title": "test:pattern matches a regular expression against the project-relative test path",
+   "claim": "Verdict: kept. The code applies `test =~ /#{regex}/` to each collected test path. Collected paths are relative to the project, so `^test/unit/` matched one test and the absolute directory of the project is never part of the text (`test:path[gap-10]` found nothing).",
+   "evidence": [
+    "docs/mkdocs/reference/command-line.md:278-284",
+    "docs/mkdocs/getting-started/command-line.md:444-452",
+    "lib/ceedling/rakefiles/tests/tasks_tests.rake:37-47",
+    "phase1-gaps/gap-10/cli/results.txt",
+    "phase1-gaps/gap-10/cli/gen_cli.sh"
+   ],
+   "issues": [],
+   "severity": "none",
+   "track_hint": "unknown",
+   "stream": "gap-10"
+  },
+  "verifier": {
+   "id": "GAP10-17",
+   "verdict": "partly",
+   "evidence": [
+    "lib/ceedling/rakefiles/tests/tasks_tests.rake:37-47",
+    "phase1-gaps/gap-10/cli/results.txt"
+   ],
+   "note": "test:path[gap-10] found nothing was not in run_cli.sh; inferred from code and relative paths."
+  }
+ },
+ {
+  "finding": {
+   "id": "GAP10-28",
+   "kind": "promise",
+   "title": "Dependency fetch runs in the fetch path and build steps run in the source path",
+   "claim": "Verdict: kept. Fetch steps run inside `spec.fetch_path` after it is created, so a relative archive `:source` is relative to the fetch path. Each build step runs in `spec.source_path`, and the source, build and artifact paths are created first. Both use `WorkingDir.chdir`.",
+   "evidence": [
+    "docs/mkdocs/plugins/dependencies.md:114-115",
+    "docs/mkdocs/plugins/dependencies.md:164-166",
+    "plugins/dependencies/lib/dependencies.rb:194-204",
+    "plugins/dependencies/lib/dependencies.rb:214-220"
+   ],
+   "issues": [],
+   "severity": "none",
+   "track_hint": "unknown",
+   "stream": "gap-10"
+  },
+  "verifier": {
+   "id": "GAP10-28",
+   "verdict": "partly",
+   "evidence": [
+    "plugins/dependencies/lib/dependencies.rb:194-204",
+    "plugins/dependencies/lib/dependencies.rb:214-220",
+    "plugins/dependencies/lib/dependencies.rb:218"
+   ],
+   "note": "Core right. 'Each build step runs in spec.source_path' holds only for command-line steps; a :build_lib Symbol step goes to build_builtin without a chdir (line 218). Path creation (line 214) happens only when build steps exist (lines 209-212 return first)."
+  }
+ },
+ {
+  "finding": {
+   "id": "GAP10-34",
+   "kind": "promise",
+   "title": "A mixin simple name is told from a filepath by extension or the forward slash only",
+   "claim": "Verdict: untestable here (Windows). `PathValidator#filepath?` returns true for a value with an extension or one containing `File::SEPARATOR`, which is `/` on every platform. The docs say \"no path separator\" and the project docs accept `\\`. Whether a Windows `--mixin bar\\base` (no extension) reaches this test unstandardized was not traced.",
+   "evidence": [
+    "docs/mkdocs/configuration/mixins.md:348-350",
+    "bin/path_validator.rb:33-36"
+   ],
+   "issues": [],
+   "severity": "low",
+   "track_hint": "unknown",
+   "stream": "gap-10"
+  },
+  "verifier": {
+   "id": "GAP10-34",
+   "verdict": "partly",
+   "evidence": [
+    "bin/path_validator.rb:33-36",
+    "bin/cli_handler.rb:611-617",
+    "lib/ceedling/filesystem/project_paths.rb:45"
+   ],
+   "note": "Verifier returned confirmed on the code description but found the Windows worry unfounded: command line, environment and :enabled mixin values are run through standardize_paths, which turns \\ into /, before filepath? sees them (cli_handler.rb:49,587,611-617; mixinator.rb:85; mixin_resolvinator.rb:89). Recorded as partly by the investigator because the 'untestable' verdict and the hedge in the claim are wrong."
+  }
+ },
+ {
+  "finding": {
+   "id": "GAP10-40",
+   "kind": "promise",
+   "title": "Which Ceedling picks WHICH_CEEDLING, then :which_ceedling, then vendor/ceedling, then the gem, with ~ expanded",
+   "claim": "Verdict: kept. `InstallationSelector#select` takes the first of the environment variable, the config value and `vendor/ceedling` and falls back to the launcher's own root. `validate` standardizes the value, which expands `~`. Every experiment log here shows `Launching Ceedling from /home/user/Ceedling/` from `:which_ceedling`.",
+   "evidence": [
+    "docs/mkdocs/configuration/which-ceedling.md:40-56",
+    "bin/installation_selector.rb:21-30",
+    "bin/installation_selector.rb:61-72",
+    "phase1-gaps/gap-10/collide/logs/v1_public_same_static.excerpt.txt (first line)"
+   ],
+   "issues": [],
+   "severity": "none",
+   "track_hint": "unknown",
+   "stream": "gap-10"
+  },
+  "verifier": {
+   "id": "GAP10-40",
+   "verdict": "partly",
+   "evidence": [
+    "bin/installation_selector.rb:24-34",
+    "bin/installation_selector.rb:61-62"
+   ],
+   "note": "Code claim right. 'Every experiment log here shows Launching Ceedling from :which_ceedling' is overstated: the launch line names no source, and only release logs show 'Set which Ceedling from config'. No experiment exercises ~ expansion."
+  }
+ },
+ {
+  "finding": {
+   "id": "GAP10-47",
+   "kind": "test",
+   "title": "Unity runner :includes entries are written to the runner as typed",
+   "claim": "Verdict: kept. With `:test_runner` ↳ `:includes: [foo.h, sub/missing.h]` the runner holds `#include \"foo.h\"` and `#include \"sub/missing.h\"`, and the compiler finds both through the `:include` path.",
+   "evidence": [
+    "docs/mkdocs/configuration/reference/test-runner.md:68-75",
+    "phase1-gaps/gap-10/cli/results_extra.txt (runner head and run)",
+    "phase1-gaps/gap-10/cli/run_extra.sh"
+   ],
+   "issues": [],
+   "severity": "none",
+   "track_hint": "unknown",
+   "stream": "gap-10"
+  },
+  "verifier": {
+   "id": "GAP10-47",
+   "verdict": "partly",
+   "evidence": [
+    "phase1-gaps/gap-10/cli/proj/build/test/runners/test/unit/test_foo_runner.c:4-6"
+   ],
+   "note": "Behaviour holds. Cited evidence file results_include_min.txt does not hold the runner head, and no script creates project.runner.yml or include/sub/missing.h."
+  }
+ },
+ {
+  "finding": {
+   "id": "GAP10-48",
+   "kind": "test",
+   "title": "The ${5} search path list holds more than the :paths and path-macro entries the tools doc names",
+   "claim": "Verdict: partly kept. The doc says `-I\"${5}\"` expands to the search paths of `:paths` plus build directive path macros. The real test compile line puts the test's mocks root, Partials roots and each Partial subdirectory first, then `:include` entries, then the vendor roots. `:paths` ↳ `:test` and ↳ `:source` directories are not on it.",
+   "evidence": [
+    "docs/mkdocs/configuration/reference/tools.md:121",
+    "docs/mkdocs/configuration/reference/tools.md:320",
+    "phase1-gaps/gap-10/collide/excerpts/v4_compile_command.txt",
+    "phase1-gaps/gap-10/cli/results.txt (compile commands: -I\"include\" -I\"build/vendor/unity/src\")"
+   ],
+   "issues": [],
+   "severity": "low",
+   "track_hint": "unknown",
+   "stream": "gap-10"
+  },
+  "verifier": {
+   "id": "GAP10-48",
+   "verdict": "partly",
+   "evidence": [
+    "phase1-gaps/gap-10/collide/excerpts/v4_compile_command.txt",
+    "lib/ceedling/test_invoker/test_search_paths.rb:41-48,66-73",
+    "lib/ceedling/includes/include_pathinator.rb:145-154"
+   ],
+   "note": "Core right. ':paths :test and :source directories are not on it' holds only when the test directory has no header; a :test directory holding a header is added. Real list also holds TEST_INCLUDE_PATH, :support, :libraries and test-toolchain include entries."
+  }
+ },
+ {
+  "finding": {
+   "id": "GAP10-49",
+   "kind": "test",
+   "title": "The tools doc's compile and link examples show a layout Ceedling does not build",
+   "claim": "Verdict: broken (illustrative). The example compile line has `-I\"project/tests\" -I\"project/source\"` and outputs `build/tests/out/source.o`. The linker example writes `build\\tests\\out\\test_thing.exe`. Ceedling builds objects at `build/test/out/<test path>/_t_/<mirrored source path>.o`. Source and test directories are not `-I` entries.",
+   "evidence": [
+    "docs/mkdocs/configuration/reference/tools.md:378-383",
+    "docs/mkdocs/configuration/reference/tools.md:398-401",
+    "phase1-gaps/gap-10/collide/excerpts/v4_compile_command.txt",
+    "phase1-gaps/gap-10/collide/logs/v1b_public_calls_static.excerpt.txt"
+   ],
+   "issues": [],
+   "severity": "none",
+   "track_hint": "unknown",
+   "stream": "gap-10"
+  },
+  "verifier": {
+   "id": "GAP10-49",
+   "verdict": "partly",
+   "evidence": [
+    "phase1-gaps/gap-10/cli/results.txt",
+    "lib/ceedling/test_invoker/test_search_paths.rb:66-73"
+   ],
+   "note": "Output paths right (build/test/out/<test>/_t_/ not build/tests/out). 'Test directories are not -I entries' is overstated: a :test directory holding headers is on -I."
+  }
+ },
+ {
+  "finding": {
+   "id": "GAP10-56",
+   "kind": "promise",
+   "title": "Cppcheck suppression files come from :paths :cppcheck and :files :cppcheck",
+   "claim": "Verdict: kept. Each `:paths` ↳ `:cppcheck` entry contributes its `*.xml` and `*<extension>` files, a path that does not exist logs a warning, and `:files` ↳ `:cppcheck` revises the list. `files:cppcheck` lists the result.",
+   "evidence": [
+    "docs/mkdocs/plugins/cppcheck.md:433-445",
+    "docs/mkdocs/plugins/cppcheck.md:521-531",
+    "plugins/cppcheck/lib/cppcheck.rb:250-275",
+    "plugins/cppcheck/cppcheck.rake:49-62"
+   ],
+   "issues": [],
+   "severity": "none",
+   "track_hint": "unknown",
+   "stream": "gap-10"
+  },
+  "verifier": {
+   "id": "GAP10-56",
+   "verdict": "partly",
+   "evidence": [
+    "plugins/cppcheck/lib/cppcheck.rb:248-273",
+    "lib/ceedling/filesystem/file_path_collection_utils.rb:32-41,80-96,142-153"
+   ],
+   "note": "Core right. 'A path that does not exist logs a warning' is wrong as a general statement: collect_paths drops a plain nonexistent entry before collect_suppressions sees it. The warning can fire only for a nonexistent entry ending in /** or /*, where with_parents re-adds the base."
+  }
+ }
+]

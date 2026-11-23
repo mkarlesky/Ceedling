@@ -1,0 +1,6 @@
+ > Launching Ceedling from /home/user/Ceedling/
+Compiling test_collide.c...
+🧨 EXCEPTION: 'Default Test Compiler' (gcc) terminated with exit code [1] and output ⏩️
+build/test/partials/test/test_collide/_t_/b/ceedling_partial_util_types.h:6:31: error: conflicting types for 'ceedling_partial_util_s_ctx_t'; have 'struct <anonymous>'
+build/test/partials/test/test_collide/_t_/b/ceedling_partial_util_impl.h:10:38: error: conflicting types for 's_ctx'; have 'ceedling_partial_util_s_ctx_t'
+Executed Command: gcc -I"build/test/mocks/test/test_collide/_t_" -I"build/test/partials/test/test_collide/_t_" -I"build/test/partials/test/test_collide/_t_/a" -I"build/test/partials/test/test_collide/_t_/b" -I"include" -I"include/a" -I"include/b" -I"build/vendor/unity/src" -I"build/vendor/cmock/src" -I"build/vendor/ceedling" -D"CMOCK_MOCK_PREFIX=Mock" -D"CEEDLING_PARTIALS_PREFIX=ceedling_partial_" -D"UNITY_USE_COMMAND_LINE_ARGS" -DGNU_COMPILER -g -c "test/test_collide.c" -o "build/test/out/test/test_collide/_t_/test/test_collide.o" -MMD -MF "build/test/dependencies/test/test_collide/_t_/test/test_collide.d"

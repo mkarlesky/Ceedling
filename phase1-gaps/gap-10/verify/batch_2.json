@@ -1,0 +1,165 @@
+[
+ {
+  "id": "GAP10-11",
+  "kind": "promise",
+  "title": "Same-named modules named by directory stay distinct modules in the Partials config",
+  "claim": "Verdict: kept. `_module_key` joins a qualified macro's directory segments to the module with `File.join`, so `./drv` and `drv` give one module and `a/util` and `b/util` give two. Validation rejects an empty or quoted module, a module carrying a path, and a directory that is empty, quoted, absolute, or holds `..`. The experiment confirms two distinct generated Partials for the two modules.",
+  "evidence": [
+   "lib/ceedling/partials/partializer_config.rb:250-270",
+   "lib/ceedling/partials/partializer_config.rb:276-300",
+   "lib/ceedling/partials/partializer_config.rb:323-355",
+   "phase1-gaps/gap-10/collide/results.txt (v1_public_same_static exit=0)"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-12",
+  "kind": "promise",
+  "title": "Generated Partial filenames for _AT macros carry the macro's directory, which the docs table omits",
+  "claim": "Verdict: partly kept. The overview table lists `ceedling_partial_<module>_impl.h` and the sibling patterns. For `_AT` macros the file is `<dir>/ceedling_partial_<module>_impl.h`: `form_partial_filename` puts the directory first and the prefix on the basename. The unqualified macros name a file with no directory.",
+  "evidence": [
+   "docs/mkdocs/testing-guide/partials/overview.md:84-89",
+   "lib/ceedling/filesystem/file_path_utils.rb:496-503",
+   "lib/ceedling/ceedling.h:40",
+   "lib/ceedling/ceedling.h:68",
+   "phase1-gaps/gap-10/collide/excerpts/v1_a_impl.h:1"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-13",
+  "kind": "promise",
+  "title": "Partials are generated into a partials build directory",
+  "claim": "Verdict: kept. Generated Partial files sit below `<build root>/test/partials/<test path>/_t_/`, one root per test, mirrored by directory for `_AT` macros.",
+  "evidence": [
+   "docs/mkdocs/testing-guide/partials/overview.md:55-56",
+   "lib/ceedling/filesystem/file_path_utils.rb:305-307",
+   "phase1-gaps/gap-10/collide/excerpts/v4_compile_command.txt",
+   "phase1-gaps/gap-10/collide/logs/v1b_public_calls_static.excerpt.txt"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-14",
+  "kind": "test",
+  "title": "A plain Partial build links only the Partial, never the module's own object",
+  "claim": "Verdict: kept. The linker command for the same-named experiment lists the test object, `a/` and `b/` `ceedling_partial_util_impl.o`, the runner and Unity. No object of `src/a/util.c` or `src/b/util.c` is linked.",
+  "evidence": [
+   "docs/mkdocs/testing-guide/partials/overview.md:23-24",
+   "docs/mkdocs/testing-guide/partials/example.md:93-97",
+   "phase1-gaps/gap-10/collide/logs/v1b_public_calls_static.excerpt.txt (Executed Command line)"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-15",
+  "kind": "test",
+  "title": "The unqualified Partial macro with two same-basename modules picks the first by search-path priority",
+  "claim": "Verdict: partly kept. The docs say the macros \"expand into the unique names of the generated Partials header files\". `TEST_PARTIAL_PUBLIC_MODULE(util)` with `src/a/util.c` and `src/b/util.c` names one Partial. Ceedling logs `Multiple files matched 'util.c' but chose 'src/a/util.c' by search-path priority` and the test passes against `a/`'s code. Only the `_AT` macros name two.",
+  "evidence": [
+   "docs/mkdocs/testing-guide/partials/configuration.md:42-45",
+   "phase1-gaps/gap-10/collide/results.txt (v9_unqualified_ambiguous exit=0)",
+   "phase1-gaps/gap-10/collide/logs/v9_unqualified_ambiguous.excerpt.txt",
+   "lib/ceedling/filesystem/file_finder_helper.rb:33-47"
+  ],
+  "issues": [],
+  "severity": "low",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-16",
+  "kind": "promise",
+  "title": "test:path matches a substring of the test's directory, not of its whole path",
+  "claim": "Verdict: partly kept. The docs say \"tests whose path contains the given string\". The code tests `File.dirname(test).include?(arg)` on the project-relative test path, with `\\` turned into `/`. With tests in `test/unit`, `test/unit_extra` and `test/integration`: `test:path[unit]` ran 2 tests (substring, so `unit_extra` too), `test:path[nit]` ran 2, `test:path[t/in]` ran 1, `test:path[unit/]` found none (no trailing separator in a dirname), `test:path[test_foo.c]` found none (filename excluded) and `test:path[Test]` found none (case).",
+  "evidence": [
+   "docs/mkdocs/reference/command-line.md:286-292",
+   "docs/mkdocs/getting-started/command-line.md:458-465",
+   "lib/ceedling/rakefiles/tests/tasks_tests.rake:49-56",
+   "phase1-gaps/gap-10/cli/results.txt",
+   "phase1-gaps/gap-10/cli/gen_cli.sh"
+  ],
+  "issues": [],
+  "severity": "low",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-17",
+  "kind": "promise",
+  "title": "test:pattern matches a regular expression against the project-relative test path",
+  "claim": "Verdict: kept. The code applies `test =~ /#{regex}/` to each collected test path. Collected paths are relative to the project, so `^test/unit/` matched one test and the absolute directory of the project is never part of the text (`test:path[gap-10]` found nothing).",
+  "evidence": [
+   "docs/mkdocs/reference/command-line.md:278-284",
+   "docs/mkdocs/getting-started/command-line.md:444-452",
+   "lib/ceedling/rakefiles/tests/tasks_tests.rake:37-47",
+   "phase1-gaps/gap-10/cli/results.txt",
+   "phase1-gaps/gap-10/cli/gen_cli.sh"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-18",
+  "kind": "test",
+  "title": "test:<name> takes as much trailing path as needed and names every match when ambiguous",
+  "claim": "Verdict: kept. With `test/unit/test_foo.c`, `test/integration/test_foo.c` and `test/unit_extra/test_foo.c`, `test:test_foo.c` stops with `Ambiguous file reference 'test_foo.c' found. Include more trailing path` and lists all three. `test:unit/test_foo.c` and `test:unit\\test_foo.c` each run one test. The lookup is `PathMatcher` in strict mode.",
+  "evidence": [
+   "docs/mkdocs/getting-started/command-line.md:386-396",
+   "lib/ceedling/filesystem/file_finder.rb:80-83",
+   "lib/ceedling/filesystem/path_matcher.rb:20-37",
+   "lib/ceedling/rakefiles/tests/rules_tests.rake:10-24",
+   "phase1-gaps/gap-10/cli/results.txt"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-19",
+  "kind": "promise",
+  "title": "The bullseye: and gcov: tasks reuse the test: name, pattern and path rules",
+  "claim": "Verdict: kept. Both plugins resolve a single-file task with `TestTaskName.test_name` and `find_test_file_from_name`, so trailing-path disambiguation matches `test:`. Their `path` tasks use the same `File.dirname(test).include?` test, so the `test:path` limits apply to them too. Read only. I did not run these plugins.",
+  "evidence": [
+   "docs/mkdocs/plugins/bullseye/index.md:28-38",
+   "docs/mkdocs/plugins/gcov/overview.md:37-39",
+   "plugins/bullseye/bullseye.rake:70-90",
+   "plugins/gcov/gcov.rake:70-90"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ },
+ {
+  "id": "GAP10-20",
+  "kind": "promise",
+  "title": "ceedling paths:header does not exist; the task is paths:include",
+  "claim": "Verdict: broken. The reference lists `ceedling paths:header`. Ceedling defines a `paths:<name>` task for each key of `:paths`, and the standard sections are test, source, include and support. `ceedling paths:header` ends with `Unrecognized build task`. `paths:include` lists the include paths. The getting-started page repeats the error by listing `files:*` variants under `paths:*`.",
+  "evidence": [
+   "docs/mkdocs/reference/command-line.md:177-182",
+   "docs/mkdocs/getting-started/command-line.md:331-337",
+   "lib/ceedling/rakefiles/base/tasks_filesystem.rake:72-80",
+   "phase1-gaps/gap-10/cli_tasks.txt"
+  ],
+  "issues": [],
+  "severity": "low",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ }
+]

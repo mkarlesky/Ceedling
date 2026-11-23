@@ -1,0 +1,17 @@
+[
+ {
+  "id": "GAP10-61",
+  "kind": "promise",
+  "title": "A Partial's #line directives name the module's project-relative source file",
+  "claim": "Verdict: kept. The generated `a/ceedling_partial_util_impl.c` holds `#line 4 \"src/a/util.c\"` ahead of the function, the path as the project spells it. The coverage plugins' retargeting of Partial coverage onto the original relies on that path. Not run with a coverage tool.",
+  "evidence": [
+   "docs/mkdocs/plugins/bullseye/index.md:428-439",
+   "docs/mkdocs/plugins/gcov/troubleshooting.md:8-21",
+   "phase1-gaps/gap-10/collide/excerpts/v1_a_impl.c:4"
+  ],
+  "issues": [],
+  "severity": "none",
+  "track_hint": "unknown",
+  "stream": "gap-10"
+ }
+]

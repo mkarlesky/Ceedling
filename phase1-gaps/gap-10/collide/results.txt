@@ -1,0 +1,12 @@
+v1_public_same_static exit=0
+v1b_public_calls_static exit=1
+v1cc_compile_commands exit=0
+v2_public_same_pub exit=1
+v3_private_same_static exit=1
+v4_public_same_var exit=1
+v5_public_distinct_var exit=0
+v6_mock_both exit=0
+v6b_mock_both_no_folder exit=1
+v7_public_same_plain_var exit=1
+v8_module_named_unix exit=1
+v9_unqualified_ambiguous exit=0
