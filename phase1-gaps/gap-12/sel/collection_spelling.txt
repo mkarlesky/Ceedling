@@ -1,0 +1,8 @@
+# test:pattern[.] from a clean build: launch line, then the test files it compiled
+ > Launching Ceedling from /home/user/Ceedling/
+-c "../outside_tests/test_out.c"
+-c "test/community/test_c.c"
+-c "test/unit/test_Unit_upper.c"
+-c "test/unit/test_a.c"
+-c "test/unit_extra/test_b.c"
+-c "test_top.c"

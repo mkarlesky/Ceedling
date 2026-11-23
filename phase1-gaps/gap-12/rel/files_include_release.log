@@ -1,0 +1,66 @@
+🚧 Loaded project configuration from working directory.
+ > Using: /home/user/Ceedling/phase1-gaps/gap-12/rel/proj/project.yml
+ > Working directory: /home/user/Ceedling/phase1-gaps/gap-12/rel/proj
+ + Merging command line inline YAML mixin
+ > Set which Ceedling from config :project ↳ :which_ceedling => /home/user/Ceedling
+ > Launching Ceedling from /home/user/Ceedling/
+
+🚧 Application & Build Frameworks
+   Ceedling => 1.2.3.dev
+      CMock => 2.7.2
+      Unity => 2.7.2
+ CException => 1.3.5
+
+🚧 Validating configuration contains minimum required sections...
+
+🚧 Base configuration handling...
+
+🚧 Plugin Handling
+------------------
+Discovering all plugins...
+
+🚧 Assembling Default Settings
+------------------------------
+Collecting default tool configurations...
+Collecting CMock defaults...
+Populating project configuration with collected default values...
+
+🚧 Completing Project Configuration
+-----------------------------------
+Processing Unity configuration...
+Populating test runner generation settings...
+ℹ️ NOTICE: Enabled :test_runner ↳ :cmdline_args because :project ↳ :use_backtrace is enabled.
+Processing environment variables...
+Processing path entries and expanding any string replacements...
+Expanding any string replacements in :flags entries...
+Expanding any string replacements in :defines entries...
+Standardizing all paths...
+Populating tool definition settings and expanding any string replacements...
+
+🚧 Probing directives-only preprocessor support...
+Processing tool definition shortcuts...
+
+🚧 Validating final project configuration...
+
+🚧 Loading Plugins
+------------------
+
+Ceedling set up completed in 136 milliseconds
+
+
+👟 Determining Objects to be Built...
+
+👟 Building Objects
+-------------------
+Compiling main.c...
+> Shell executed::
+`gcc -I"src" -I"src/_t_" -I"src/drv" -I"src/other" -DGNU_COMPILER -c "src/main.c" -o "build/release/out/src/main.o" -MMD -MF "build/release/dependencies/src/main.d"`
+> And terminated with exit code: [1]
+
+🧨 EXCEPTION: 'Default Release Compiler' (gcc) terminated with exit code [1] and output ⏩️
+src/main.c:1:10: fatal error: ext.h: No such file or directory
+    1 | #include "ext.h"
+      |          ^~~~~~~
+compilation terminated.
+Executed Command: gcc -I"src" -I"src/_t_" -I"src/drv" -I"src/other" -DGNU_COMPILER -c "src/main.c" -o "build/release/out/src/main.o" -MMD -MF "build/release/dependencies/src/main.d"
+🌱 Ceedling could not complete operations because of errors

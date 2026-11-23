@@ -1,0 +1,970 @@
+[
+  {
+    "id": "GAP12-01",
+    "stream": "gap-12",
+    "kind": "site",
+    "title": "Release planner takes its object list from two collections",
+    "claim": "ReleaseBuildPlanner#plan builds a full release from collection_release_build_input plus collection_release_artifact_extra_link_objects, and a scoped release:compile:/release:assemble: run from the one source path it is given. It places both lists through FilePathUtils#form_release_build_objects_filelist, and joins the two lists with a text uniq.",
+    "evidence": [
+      "lib/ceedling/release_invoker/release_build_planner.rb:39-46",
+      "lib/ceedling/release_invoker/release_build_planner.rb:56-61",
+      "lib/ceedling/rakefiles/release/rules_release.rake:33",
+      "lib/ceedling/rakefiles/release/rules_release.rake:45"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": ""
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-02",
+    "stream": "gap-12",
+    "kind": "placement",
+    "title": "Release objects are placed by the source's path from the project root",
+    "claim": "form_release_build_objects_filelist calls mirror_build_objects with release: true, which places each source at build/release/out/<BuildSubpath.of_directory(dirname)>/<basename>.o. A `..` becomes `_up_` and a `_t_` directory is kept unescaped. Observed: src/drv/uart.c builds to build/release/out/src/drv/uart.o, ../shared/crc.c to build/release/out/_up_/shared/crc.o, and src/_t_/odd.c to build/release/out/src/_t_/odd.o.",
+    "evidence": [
+      "lib/ceedling/filesystem/file_path_utils.rb:194-196",
+      "lib/ceedling/filesystem/file_path_utils.rb:610-616",
+      "lib/ceedling/filesystem/file_path_utils.rb:633-639",
+      "lib/ceedling/filesystem/build_subpath.rb:61-66",
+      "phase1-gaps/gap-12/rel/logs_release_full.log",
+      "phase1-gaps/gap-12/rel/release_tree.txt",
+      "lib/ceedling/filesystem/build_subpath.rb:110-114"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "The _up_ spelling comes from PARENT_SEGMENT in build_subpath.rb:113, not from lines 61-66 alone."
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-03",
+    "stream": "gap-12",
+    "kind": "placement",
+    "title": "A release dependencies file mirrors its object's subpath",
+    "claim": "form_release_dependencies_filepath takes the object's directory below project_release_build_output_path through PathMirror.relative_subdir, which compares by whole directories, and re-roots it below project_release_dependencies_path with the dependencies extension. Observed: build/release/dependencies/_up_/shared/crc.d beside build/release/out/_up_/shared/crc.o.",
+    "evidence": [
+      "lib/ceedling/filesystem/file_path_utils.rb:185-190",
+      "lib/ceedling/filesystem/path_mirror.rb:22-24",
+      "lib/ceedling/filesystem/path_mirror.rb:68-71",
+      "lib/ceedling/release_invoker/release_build_executor.rb:117",
+      "phase1-gaps/gap-12/rel/logs_release_full.log"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": ""
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-04",
+    "stream": "gap-12",
+    "kind": "placement",
+    "title": "A release list file sits beside its object",
+    "claim": "form_release_build_list_filepath joins the object's own directory with its basename and the list extension, with no mirroring of its own. Both the C and the assembly branch of compile_release_component pass it to the generator.",
+    "evidence": [
+      "lib/ceedling/filesystem/file_path_utils.rb:200-202",
+      "lib/ceedling/release_invoker/release_build_executor.rb:142",
+      "lib/ceedling/release_invoker/release_build_executor.rb:163"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": ""
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-05",
+    "stream": "gap-12",
+    "kind": "mechanism",
+    "title": "The CException link-only object is a bare name that lands where the vendored source's object lands",
+    "claim": "collect_release_artifact_extra_link_objects lists the CException object as the bare name CException.o with no path. Placed as a file in the working directory, it encodes to an empty subpath, and the vendored build/vendor/c_exception/lib/CException.c lands flat because it lies in the build root. Both give build/release/out/CException.o, and the planner's uniq at line 60 joins them. The two lists go through separate mirror_build_objects calls, so no collision check spans them. Observed one CException.o compiled from build/vendor/c_exception/lib/CException.c.",
+    "evidence": [
+      "lib/ceedling/config/configurator_builder.rb:323-330",
+      "lib/ceedling/config/configurator_builder.rb:302-310",
+      "lib/ceedling/filesystem/file_path_utils.rb:636-638",
+      "lib/ceedling/release_invoker/release_build_planner.rb:56-61",
+      "phase1-gaps/gap-12/rel/cexception_release.log"
+    ],
+    "issues": [
+
+    ],
+    "severity": "low",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "The empty subpath for the bare name is inferred from the placement code and the log. The verifier did not trace BuildSubpath.relative_segments for the working directory itself."
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-06",
+    "stream": "gap-12",
+    "kind": "mechanism",
+    "title": "A release object finds its source by decoding its own path",
+    "claim": "compile_release_component asks FileFinder#find_build_input_file for the object's input. For a release object below the release output root, mirrored_query decodes the subdirectory with BuildSubpath.decode(release: true) and marks the query exact, and exact_file matches it by ProjectPaths.absolute before any tail match.",
+    "evidence": [
+      "lib/ceedling/release_invoker/release_build_executor.rb:116",
+      "lib/ceedling/filesystem/file_finder.rb:212-214",
+      "lib/ceedling/filesystem/file_finder.rb:352-365",
+      "lib/ceedling/filesystem/file_finder.rb:373-377",
+      "lib/ceedling/filesystem/file_finder.rb:382-394",
+      "lib/ceedling/filesystem/file_finder.rb:256-265"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": ""
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-07",
+    "stream": "gap-12",
+    "kind": "defect",
+    "title": "A release source named like a vendor framework source is looked up by basename in the test build input",
+    "claim": "In find_build_input_file the vendor-framework branch has no release guard. When an object's basename plus .c is in collection_vendor_framework_sources, it searches collection_existing_test_build_input by name before the exact decoded query is tried. Observed: a release with src/mylib/unity.c compiled it while build/vendor/unity/src was empty, then stopped with `Ambiguous file reference 'unity.c'` naming build/vendor/unity/src/unity.c and src/mylib/unity.c once a test build had populated build/vendor.",
+    "evidence": [
+      "lib/ceedling/filesystem/file_finder.rb:177-185",
+      "lib/ceedling/filesystem/file_finder.rb:212",
+      "lib/ceedling/config/configurator_builder.rb:348-352",
+      "lib/ceedling/config/configurator_builder.rb:314-320",
+      "phase1-gaps/gap-12/rel/vendor_name_1.log",
+      "phase1-gaps/gap-12/rel/vendor_name_5.log",
+      "phase1-gaps/gap-12/rel/vendor_name_sequence.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "medium",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "The log that shows build/vendor/unity/src empty is not itself in the repo as a listing. It is consistent with the vendor_name_1 compile and the file-on-disk glob at configurator_builder.rb:349."
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-08",
+    "stream": "gap-12",
+    "kind": "site",
+    "title": "Release link registers and builds the target at its configured spelling",
+    "claim": "ReleaseBuildExecutor#link splits libraries from objects, registers project_release_build_target with the dependency tracker under the text it was configured with, creates File.dirname(target), and links to it. Observed link command: gcc <objects> -o \"build/release/bin/app.out\" for :output bin/app.out.",
+    "evidence": [
+      "lib/ceedling/release_invoker/release_build_executor.rb:46-76",
+      "phase1-gaps/gap-12/rel/logs_release_full.log"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "The line range 46-76 is slightly wide but covers the whole link method."
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-09",
+    "stream": "gap-12",
+    "kind": "spelling",
+    "title": "The release target is the standardized :output, joined under build/release unless absolute",
+    "claim": "set_release_target standardizes :release_build ↳ :output, derives the map name from it, and release_place joins a relative name under project_build_release_root with File.join and keeps an absolute one. Neither result is made absolute or has `..` resolved. :output is not among the entries eval_paths expands for inline Ruby.",
+    "evidence": [
+      "lib/ceedling/config/configurator_builder.rb:139-149",
+      "lib/ceedling/config/configurator_builder.rb:360-362",
+      "lib/ceedling/config/configurator.rb:366-379"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": ""
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-10",
+    "stream": "gap-12",
+    "kind": "defect",
+    "title": "A relative :output that climbs puts the release artifact outside the build root",
+    "claim": "release_place joins a relative :output under build/release without checking containment, so `:output: ../../escaped.out` links to build/release/../../escaped.out, which is the project directory, and its map path is build/release/../../escaped.map. The link mkdirs File.dirname(target) without a check. This departs from the invariant that a build file lies below the build root. Docs say only an absolute or `~` path names the release itself.",
+    "evidence": [
+      "lib/ceedling/config/configurator_builder.rb:360-362",
+      "lib/ceedling/release_invoker/release_build_executor.rb:63-65",
+      "docs/mkdocs/configuration/reference/release-build.md:31-37",
+      "phase1-gaps/gap-12/rel/output_climb.log"
+    ],
+    "issues": [
+
+    ],
+    "severity": "low",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "The 'invariant that a build file lies below the build root' is the report's interpretation. The mechanism and the observed path are shown by the code and the log."
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-11",
+    "stream": "gap-12",
+    "kind": "mechanism",
+    "title": "Release libraries are told from objects by the end of their path text",
+    "claim": "sort_objects_and_libraries splits the release object list with a regex on the path's ending, built from EXTENSION_SUBPROJECTS and EXTENSION_LIBRARIES, or `.LIBRARY` when neither is defined. An entry's kind comes from its extension text alone.",
+    "evidence": [
+      "lib/ceedling/release_invoker/release_build_executor.rb:227-242"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "Kind comes from the trailing path text alone, with no file or disk check."
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-12",
+    "stream": "gap-12",
+    "kind": "placement",
+    "title": "Release artifacts are copied flat into the artifacts directory",
+    "claim": "artifactinate copies the target, the map, and each :release_build ↳ :artifacts entry with FileWrapper#cp into project_release_artifacts_path, which is a directory, so each keeps only its basename. Observed: :output bin/app.out is copied to build/artifacts/release/app.out.",
+    "evidence": [
+      "lib/ceedling/release_invoker/release_build_executor.rb:91-108",
+      "lib/ceedling/filesystem/file_wrapper.rb:186-189",
+      "lib/ceedling/config/configurator_builder.rb:430",
+      "phase1-gaps/gap-12/rel/logs_release_full.log",
+      "phase1-gaps/gap-12/rel/release_tree.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "The destination is a directory, so FileUtils.cp keeps only the basename."
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-13",
+    "stream": "gap-12",
+    "kind": "defect",
+    "title": "Two release artifacts with one basename overwrite each other",
+    "claim": "artifactinate copies every artifact to one flat directory with no DestinationCollision check, so :artifacts extras/a/notes.txt and extras/b/notes.txt both land at build/artifacts/release/notes.txt and the later one wins silently. Observed: the copied notes.txt holds `b`.",
+    "evidence": [
+      "lib/ceedling/release_invoker/release_build_executor.rb:103-107",
+      "phase1-gaps/gap-12/rel/proj/project.yml",
+      "phase1-gaps/gap-12/rel/release_tree.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "low",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "file_wrapper.rb:186-189 shows cp has no DestinationCollision check. The two sources are in order, so the later one wins."
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-14",
+    "stream": "gap-12",
+    "kind": "defect",
+    "title": "Release waits on a dependencies file an assembler never writes and a map a default link never writes",
+    "claim": "compile_release_component forms a dependencies path for every object and calls exist_with_retry? on it after each compile, assembly included, though the comment calls the assembly case a no-op. exist_with_retry? sleeps through its retry delays and logs at NORMAL when the file never appears. artifactinate does the same for the map. Observed: `'build/release/dependencies/src/drv/start.d' still not present after waiting 0.37s across 4 retries` and the same for build/release/bin/app.map.",
+    "evidence": [
+      "lib/ceedling/release_invoker/release_build_executor.rb:117",
+      "lib/ceedling/release_invoker/release_build_executor.rb:168-173",
+      "lib/ceedling/release_invoker/release_build_executor.rb:106",
+      "lib/ceedling/filesystem/file_wrapper.rb:268-277",
+      "phase1-gaps/gap-12/rel/logs_release_full.log"
+    ],
+    "issues": [
+
+    ],
+    "severity": "low",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "The wait happens only after a real compile. A skipped object returns at lines 123 and 149 before reaching it."
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-15",
+    "stream": "gap-12",
+    "kind": "site",
+    "title": "release:compile: and release:assemble: find their source by name in the source collection",
+    "claim": "The release:compile: rule strips the task root and passes the rest to FileFinder#find_source_file, which searches collection_all_source through find_first_candidate with strict false, so a miss on the last spelling goes through resolve_file_in_collection. release:assemble: does the same with find_assembly_file and collection_all_assembly. The task name must end in a configured source or assembly extension.",
+    "evidence": [
+      "lib/ceedling/rakefiles/release/rules_release.rake:26-34",
+      "lib/ceedling/rakefiles/release/rules_release.rake:37-47",
+      "lib/ceedling/filesystem/file_finder.rb:237-244",
+      "lib/ceedling/filesystem/file_finder.rb:468-481",
+      "lib/ceedling/filesystem/file_finder_helper.rb:33-46"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": ""
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-16",
+    "stream": "gap-12",
+    "kind": "defect",
+    "title": "An ambiguous release:compile: name compiles the first match",
+    "claim": "Because find_source_file is not strict, `release:compile:dup.c` with src/drv/dup.c and src/other/dup.c compiles src/drv/dup.c and logs a NOTICE naming the other, where the test:<file> rule's find_test_file_from_name is strict and raises on ambiguity. A file name stands in for the path here.",
+    "evidence": [
+      "lib/ceedling/filesystem/file_finder.rb:80-83",
+      "lib/ceedling/filesystem/file_finder.rb:237-239",
+      "lib/ceedling/filesystem/file_finder.rb:468-481",
+      "lib/ceedling/filesystem/path_matcher.rb:45-50",
+      "phase1-gaps/gap-12/rel/logs_release_compile.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "low",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "The NOTICE text says 'by search-path priority', which matches the claim's wording."
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-17",
+    "stream": "gap-12",
+    "kind": "defect",
+    "title": "release:compile: refuses a `..` spelling of a project source",
+    "claim": "find_source_file never resolves `..` in the task's path, so the trailing-segment match needs the collection entry to hold the same `..` segments. Observed: release:compile: accepts uart.c, drv/uart.c, src/drv/uart.c, ./src/drv/uart.c, src\\drv\\uart.c, the absolute path and ../shared/crc.c, but `../proj/src/drv/uart.c`, the same file, fails with `Found no file`. find_test_file_from_name resolves `..` first with PathMatcher.resolve_relative.",
+    "evidence": [
+      "lib/ceedling/filesystem/file_finder.rb:237-239",
+      "lib/ceedling/filesystem/file_finder.rb:80-82",
+      "lib/ceedling/filesystem/path_matcher.rb:53-61",
+      "lib/ceedling/filesystem/path_matcher.rb:176-179",
+      "phase1-gaps/gap-12/rel/logs_release_compile.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "low",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": ""
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-18",
+    "stream": "gap-12",
+    "kind": "spelling",
+    "title": "PathMatcher compares an absolute query as expanded text",
+    "claim": "PathMatcher.candidates compares an absolute query with each candidate by File.expand_path text, which resolves no symlink and folds no case on Windows, and compares a relative query by exact trailing segments on every platform. ProjectPaths.same? folds case on Windows and canonical resolves symlinks.",
+    "evidence": [
+      "lib/ceedling/filesystem/path_matcher.rb:53-61",
+      "lib/ceedling/filesystem/path_matcher.rb:166-179",
+      "lib/ceedling/filesystem/project_paths.rb:125-127",
+      "lib/ceedling/filesystem/project_paths.rb:69-71"
+    ],
+    "issues": [
+
+    ],
+    "severity": "low",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "expand_path neither resolves symlinks nor folds case. This follows from the code and was not observed."
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-19",
+    "stream": "gap-12",
+    "kind": "promise",
+    "title": "A release compile reaches headers only through :paths ↳ :include",
+    "claim": "The planner sets the release search paths to collection_paths_include alone, and GCC resolves each #include from them. The docs promise this. Observed: with `:files: :include: [extinc/ext.h]`, the release compile of src/main.c fails with `ext.h: No such file or directory`.",
+    "evidence": [
+      "lib/ceedling/release_invoker/release_build_planner.rb:51",
+      "docs/mkdocs/configuration/reference/files.md:119",
+      "phase1-gaps/gap-12/rel/files_include_release.log"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": ""
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-20",
+    "stream": "gap-12",
+    "kind": "site",
+    "title": "Project-file discovery looks only in the working directory",
+    "claim": "Projectinator#load takes --project first, then CEEDLING_PROJECT_FILE, then ./project.yml or ./ceedling.yml in the working directory. It raises when both defaults exist or when neither does. Every branch returns the File.expand_path'd path. Only the --project branch and the env-var branch run @path_validator.standardize_paths before recording that path in :history. The default-discovery branch records the raw constant './project.yml' or './ceedling.yml'. Observed: run from proj/src it fails with `No project filepath provided and neither default ./project.yml nor ./ceedling.yml found`.",
+    "original_claim": "Projectinator#load takes --project first, then CEEDLING_PROJECT_FILE, then ./project.yml or ./ceedling.yml in the working directory, and raises when both defaults exist or neither does. It returns the File.expand_path'd path and records the standardized spelling in :history. Observed: run from proj/src it fails with `neither default ./project.yml nor ./ceedling.yml found`.",
+    "evidence": [
+      "bin/projectinator.rb:31-84",
+      "bin/projectinator.rb:14-17",
+      "phase1-gaps/gap-12/binx/bin_results.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "B",
+    "status": "revised",
+    "verdict": {
+      "verdict": "partly",
+      "note": "Everything is right except the standardized-spelling detail. Only the --project path (projectinator.rb:34) and the env-var path (:43) run standardize_paths before recording :history. The default-discovery branch (:73) records the raw './project.yml' or './ceedling.yml' constant. All three branches return File.expand_path'd paths."
+    },
+    "ruling": {
+      "final": "revised",
+      "reason": "The order and the errors are as claimed (bin/projectinator.rb:33-38, :41-50, :53-82). Default discovery checks the ./-prefixed constants (:14, :17), raises on both at :59-60 and on neither at :77-81. Each branch returns File.expand_path at :35, :43 and :71. standardize_paths runs only at :34 and :42, so the :history entry at :73 holds the unstandardized constant chosen at :63-68. The observation stands in phase1-gaps/gap-12/binx/bin_results.txt."
+    }
+  },
+  {
+    "id": "GAP12-21",
+    "stream": "gap-12",
+    "kind": "defect",
+    "title": "--project and CEEDLING_PROJECT_FILE read a `~user` path as that user's home",
+    "claim": "Projectinator#load standardizes the --project or CEEDLING_PROJECT_FILE path with ProjectPaths.standardize, which keeps `~user` literal, then makes it absolute with File.expand_path, which reads `~user` as that user's home. ProjectPaths says `~user` names a directory of that name. Observed: `--project '~root/project.yml'`, with ./~root/project.yml present, fails with `Could not find project filepath /root/project.yml`.",
+    "evidence": [
+      "bin/projectinator.rb:34-35",
+      "bin/projectinator.rb:42-43",
+      "lib/ceedling/filesystem/project_paths.rb:41-50",
+      "lib/ceedling/filesystem/project_paths.rb:144-152",
+      "phase1-gaps/gap-12/binx/bin_results.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "low",
+    "track_hint": "B",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "Both entry points are covered."
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-22",
+    "stream": "gap-12",
+    "kind": "defect",
+    "title": "--logfile reads a `~user` path as that user's home",
+    "claim": "The build command standardizes --logfile, and process_log_filepath makes it absolute with File.expand_path and creates its directory. A `~user` prefix, kept literal by standardize, becomes that user's home. Observed: `--logfile '~root/gap12.log'` wrote /root/gap12.log and logged ` > Logfile: /root/gap12.log`, with nothing under ./~root/.",
+    "evidence": [
+      "bin/cli_handler.rb:199",
+      "bin/cli_helper.rb:230-259",
+      "phase1-gaps/gap-12/binx/bin_results.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "low",
+    "track_hint": "B",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": ""
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-23",
+    "stream": "gap-12",
+    "kind": "defect",
+    "title": ":which_ceedling checks one spelling and loads another",
+    "claim": "InstallationSelector#validate checks the standardized :which_ceedling with directory?, which reads `~user` literally, then Installation.new and AppConfig#set_paths make it absolute with File.expand_path, which reads it as that user's home. Observed: with ./~root a symlink to this checkout, `:which_ceedling: ~root` passes the directory check and fails with `Configured Ceedling launch path ~root/ contains no Ceedling installation`.",
+    "evidence": [
+      "bin/installation_selector.rb:61-72",
+      "lib/ceedling/installation.rb:26-35",
+      "bin/app_cfg.rb:139-152",
+      "phase1-gaps/gap-12/binx/bin_results.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "low",
+    "track_hint": "B",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "The observed failure comes from the Installation.new call inside validate, at the rakefile check. The report's chain still holds."
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-24",
+    "stream": "gap-12",
+    "kind": "site",
+    "title": "The log path is the build root's logs directory, made absolute at the end",
+    "claim": "process_logging_path expands :project ↳ :build_root for inline Ruby, standardizes it, refuses an empty one, and returns File.join(build_root, 'logs'), still relative. process_log_filepath joins it with ceedling.log, or takes --logfile, then applies File.expand_path and creates the directory.",
+    "evidence": [
+      "bin/cli_helper.rb:216-227",
+      "bin/cli_helper.rb:230-259",
+      "lib/ceedling/constants.rb:148",
+      "lib/ceedling/constants.rb:185"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "B",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": ""
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-25",
+    "stream": "gap-12",
+    "kind": "site",
+    "title": ":which_ceedling picks an installation by precedence, with `gem` as a reserved name",
+    "claim": "InstallationSelector#select takes WHICH_CEEDLING, then :project ↳ :which_ceedling, then ./vendor/ceedling when detect_vendor is on, then the launcher. A value equal to `gem` in any case stands for the launcher, so a directory named gem needs another spelling such as ./gem. A path is relative to the working directory. Installation#== compares File.realpath of both roots, folding case on Windows.",
+    "evidence": [
+      "bin/installation_selector.rb:24-34",
+      "bin/installation_selector.rb:53-58",
+      "lib/ceedling/installation.rb:55-77",
+      "docs/mkdocs/configuration/which-ceedling.md:74-80"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "B",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "The `./gem` spelling is an inference. standardize keeps './gem', which is not equal to `gem`."
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-26",
+    "stream": "gap-12",
+    "kind": "site",
+    "title": "Mixin names are joined with each load path as written",
+    "claim": "Composinator#loadinate appends File.dirname(project_filepath) and the built-in load paths to :mixins ↳ :load_paths and drops duplicates by File.expand_path. MixinResolvinator#mixin_filepath joins each load path with the name plus each YAML extension, load path by load path, and takes the first that exists. It does no recursive search and no trailing-name match.",
+    "evidence": [
+      "bin/composinator.rb:30-34",
+      "bin/mixin_resolvinator.rb:107-112",
+      "bin/mixin_resolvinator.rb:62-81",
+      "phase1-gaps/gap-12/binx/bin_results.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "B",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": ""
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-27",
+    "stream": "gap-12",
+    "kind": "spelling",
+    "title": "Mixin load paths resolve against the working directory, the project file's directory is absolute",
+    "claim": ":mixins ↳ :load_paths and :enabled get inline Ruby expansion and ProjectPaths.standardize and stay relative to the working directory, while the project file's directory is appended in absolute form. Observed: a mixin found through load path cfg/mixins merges `using cfg/mixins/lp.yml`, one found beside the project file merges `using /home/.../proj/cfg/by_name.yml`, and the same project run from the parent directory fails `'cfg/mixins' does not exist as a directory`.",
+    "evidence": [
+      "bin/mixin_resolvinator.rb:26-32",
+      "bin/mixin_resolvinator.rb:88-90",
+      "bin/composinator.rb:32",
+      "bin/projectinator.rb:34-38",
+      "phase1-gaps/gap-12/binx/bin_results.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "B",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": ""
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-28",
+    "stream": "gap-12",
+    "kind": "mechanism",
+    "title": "Whether a mixin value is a name or a path depends on its text",
+    "claim": "PathValidator#filepath? calls a value a filepath when it has any extension or a `/`. A name with a dot such as my.extra is then read as a file relative to the working directory and never searched in load paths, and a filename such as lp.yml present only in a load path is not found. The docs define this split. Observed: `Cannot find mixin at my.extra` and `Cannot find mixin at lp.yml`.",
+    "evidence": [
+      "bin/path_validator.rb:33-36",
+      "bin/mixin_resolvinator.rb:68-78",
+      "bin/mixin_resolvinator.rb:93-105",
+      "docs/mkdocs/configuration/mixins.md:348-351",
+      "phase1-gaps/gap-12/binx/bin_results.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "low",
+    "track_hint": "B",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": ""
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-29",
+    "stream": "gap-12",
+    "kind": "defect",
+    "title": "One mixin file reached by two spellings merges twice",
+    "claim": "Mixinator#assemble_mixins drops duplicate file mixins by File.expand_path text, which resolves no symlink. Observed: `--mixin twice.yml --mixin lnk/twice.yml`, with lnk a symlink to `.`, merges the file twice and :defines ↳ :test lists FROM_TWICE twice. The load-path and environment-variable dedupes use the same text comparison.",
+    "evidence": [
+      "bin/mixinator.rb:131-137",
+      "bin/mixinator.rb:91",
+      "bin/composinator.rb:34",
+      "phase1-gaps/gap-12/binx/bin_results.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "low",
+    "track_hint": "B",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": ""
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-30",
+    "stream": "gap-12",
+    "kind": "caller",
+    "title": "Mixins resolve with the launcher's built-in load path before :which_ceedling is read",
+    "claim": "BUILTIN_MIXIN_LOAD_PATHS is fixed when bin/mixins.rb loads, from the launcher's vendor path. load_project_and_launch runs Composinator#loadinate with it and only then reads :which_ceedling from the merged configuration, so a mixin can set :which_ceedling. Observed: a --mixin setting :which_ceedling took effect.",
+    "evidence": [
+      "bin/mixins.rb:8-9",
+      "bin/cli_handler.rb:624-638",
+      "bin/installation_selector.rb:45-51",
+      "phase1-gaps/gap-12/binx/bin_results.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "B",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": ""
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-31",
+    "stream": "gap-12",
+    "kind": "site",
+    "title": "Plugin load paths get the same expansion in bin/ and lib/",
+    "claim": "RakefileComponentResolver.prepare_plugin_load_paths takes an expand: lambda and standardizes each :plugins ↳ :load_paths entry, and CliHelper#build_rake_task_registry passes inline Ruby expansion. A plugin's rakefile is the first existing <load_path>/<plugin>/<plugin>.rake. Duplicate load paths are dropped by text with uniq!.",
+    "evidence": [
+      "lib/ceedling/rake_app/rakefile_component_resolver.rb:46-52",
+      "lib/ceedling/rake_app/rakefile_component_resolver.rb:76-80",
+      "bin/cli_helper.rb:123-133"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "B",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "uniq! compares path text only, as claimed. configurator.rb:158 calls the same helper on the lib side."
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-32",
+    "stream": "gap-12",
+    "kind": "site",
+    "title": "test:pattern matches a regex against each test's path text",
+    "claim": "The core test:pattern task keeps every COLLECTION_ALL_TESTS entry whose text matches /#{args.regex}/. Entries are relative to the working directory and carry their extension. Observed: `^test/` selects the four tests below test/, `^./test/` selects none, and `outside` selects ../outside_tests/test_out.c.",
+    "evidence": [
+      "lib/ceedling/rakefiles/tests/tasks_tests.rake:37-47",
+      "phase1-gaps/gap-12/sel/selection_results.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": ""
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-33",
+    "stream": "gap-12",
+    "kind": "defect",
+    "title": "test:pattern with no argument runs every test, the plugin copies raise",
+    "claim": "The core task interpolates a nil regex into //, which matches every test, while the sanitize and valgrind copies call Regexp.new(nil) and raise. Observed: `test:pattern` and `test:pattern[]` select all six tests, and `valgrind:pattern` and `sanitize:pattern` stop with `no implicit conversion of nil into String`.",
+    "evidence": [
+      "lib/ceedling/rakefiles/tests/tasks_tests.rake:40",
+      "plugins/sanitize/sanitize.rake:63",
+      "plugins/valgrind/valgrind.rake:64",
+      "phase1-gaps/gap-12/sel/selection_results.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "low",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "gcov.rake:56 and bullseye.rake:56 have the same Regexp.new call, so the plugin set is larger than the two named. The claim does not say it is exhaustive."
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-34",
+    "stream": "gap-12",
+    "kind": "defect",
+    "title": "test:path compares directory text by substring",
+    "claim": "The core test:path task keeps a test when File.dirname(test) includes the argument as a substring, after only a backslash-to-slash swap. This departs from containment by whole directories. Observed: `unit` selects test/community and test/unit_extra, `test/unit` selects test/unit_extra, and `./test/unit`, `test/unit/` and the absolute path select nothing.",
+    "evidence": [
+      "lib/ceedling/rakefiles/tests/tasks_tests.rake:50-60",
+      "lib/ceedling/filesystem/PATH_HANDLING.md:24",
+      "phase1-gaps/gap-12/sel/selection_results.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "medium",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": ""
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-35",
+    "stream": "gap-12",
+    "kind": "promise",
+    "title": "test:path never matches a test's file name",
+    "claim": "The docs say test:path runs tests whose path contains the string, but the task tests only File.dirname(test). Observed: `test:path[test_a]` and `test:path[test/unit/test_a]` select nothing while test/unit/test_a.c exists.",
+    "evidence": [
+      "lib/ceedling/rakefiles/tests/tasks_tests.rake:53",
+      "docs/mkdocs/getting-started/command-line.md:458-462",
+      "phase1-gaps/gap-12/sel/selection_results.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "low",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": ""
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-36",
+    "stream": "gap-12",
+    "kind": "defect",
+    "title": "A single backslash in a task argument never reaches test:path or test:pattern",
+    "claim": "Rake 13.2.1's parse_task_string unescapes a backslash before any character, so `test:path[test\\unit]` reaches the task as `testunit` and selects nothing, while `test:path[test\\\\unit]` selects test/unit. `test:pattern[\\.c$]` reaches the task as `.c$`. The docs promise `\\` as a valid separator for test:path.",
+    "evidence": [
+      "lib/ceedling/rakefiles/tests/tasks_tests.rake:53",
+      "docs/mkdocs/getting-started/command-line.md:464-465",
+      "phase1-gaps/gap-12/sel/rake_args_results.txt",
+      "phase1-gaps/gap-12/sel/rake_args.rb"
+    ],
+    "issues": [
+
+    ],
+    "severity": "low",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "tasks_tests.rake:53 does the tr, but the backslash is gone before it runs."
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-37",
+    "stream": "gap-12",
+    "kind": "defect",
+    "title": "test:path with no argument raises",
+    "claim": "The core task and the sanitize and valgrind copies call args.dir.tr with no guard, so `test:path` or `test:path[]` stops with `undefined method 'tr' for nil`. Observed for test:path, test:path[] and valgrind:path.",
+    "evidence": [
+      "lib/ceedling/rakefiles/tests/tasks_tests.rake:53",
+      "plugins/sanitize/sanitize.rake:79",
+      "plugins/valgrind/valgrind.rake:80",
+      "phase1-gaps/gap-12/sel/selection_results.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "low",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "gcov.rake:74 and bullseye.rake:74 have the same unguarded call."
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-38",
+    "stream": "gap-12",
+    "kind": "caller",
+    "title": "Four plugins repeat the core test:path rule",
+    "claim": "sanitize, valgrind, gcov and bullseye each hold their own copy of the test:path substring rule on File.dirname(test), and each compiles its pattern once with Regexp.new where core interpolates. Observed: `valgrind:path[unit]` selects test/community/test_c.c, and `sanitize:path[./test/unit]` selects nothing.",
+    "evidence": [
+      "plugins/sanitize/sanitize.rake:76-89",
+      "plugins/valgrind/valgrind.rake:77-90",
+      "plugins/gcov/gcov.rake:69-81",
+      "plugins/bullseye/bullseye.rake:69-81",
+      "plugins/sanitize/sanitize.rake:59-74",
+      "phase1-gaps/gap-12/sel/selection_results.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "Only the sanitize and valgrind results were observed. The gcov and bullseye copies are shown by reading the code."
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-39",
+    "stream": "gap-12",
+    "kind": "spelling",
+    "title": "test:<file> keeps the typed directory and matches it strictly by trailing segments",
+    "claim": "TestTaskName.test_name strips the task root and one source extension, turns backslashes into slashes, and adds the test prefix to the basename. find_test_file_from_name resolves `..` against an empty anchor and matches strictly. Observed: test_a.c, unit/test_a.c, ./test/unit/test_a.c, the absolute path and ../outside_tests/test_out.c select their test, and ../proj/test/unit/test_a.c, the same file, fails with `Found no file`.",
+    "evidence": [
+      "lib/ceedling/rake_app/test_task_name.rb:13-27",
+      "lib/ceedling/rakefiles/tests/rules_tests.rake:10-25",
+      "lib/ceedling/filesystem/file_finder.rb:80-83",
+      "lib/ceedling/filesystem/path_matcher.rb:85-103",
+      "phase1-gaps/gap-12/sel/selection_results.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "low",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": ""
+    },
+    "ruling": null
+  },
+  {
+    "id": "GAP12-40",
+    "stream": "gap-12",
+    "kind": "spelling",
+    "title": "Test collection spells each test relative to the working directory",
+    "claim": "COLLECTION_ALL_TESTS holds each test relative to the working directory, so the selection tasks compare against forms such as test/unit/test_a.c, ../outside_tests/test_out.c and test_top.c. Observed in the compile commands of a test:pattern[.] run.",
+    "evidence": [
+      "lib/ceedling/config/configurator_builder.rb:258-267",
+      "lib/ceedling/filesystem/PATH_HANDLING.md:11",
+      "phase1-gaps/gap-12/sel/collection_spelling.txt"
+    ],
+    "issues": [
+
+    ],
+    "severity": "none",
+    "track_hint": "A",
+    "status": "confirmed",
+    "verdict": {
+      "verdict": "confirmed",
+      "note": "The cited PATH_HANDLING.md:268 is about directory exclusions, not test collection. Line 11 is the better citation, and the ledger now cites it."
+    },
+    "ruling": null
+  }
+]

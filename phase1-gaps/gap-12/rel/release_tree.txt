@@ -1,0 +1,21 @@
+ > Launching Ceedling from /home/user/Ceedling/
+# Files below build/ after `ceedling release` (build/vendor omitted)
+build/artifacts/release/app.out
+build/artifacts/release/notes.txt
+build/cache/.release.dep_cache.json
+build/release/bin/app.out
+build/release/dependencies/_up_/shared/crc.d
+build/release/dependencies/src/_t_/odd.d
+build/release/dependencies/src/drv/uart.d
+build/release/dependencies/src/main.d
+build/release/dependencies/src/other/uart_other.d
+build/release/out/_up_/shared/crc.o
+build/release/out/src/_t_/odd.o
+build/release/out/src/drv/start.o
+build/release/out/src/drv/uart.o
+build/release/out/src/main.o
+build/release/out/src/other/uart_other.o
+
+# build/artifacts/release/notes.txt holds:
+b
+# extras/a/notes.txt holds: a; extras/b/notes.txt holds: b

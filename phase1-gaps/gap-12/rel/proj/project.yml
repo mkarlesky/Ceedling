@@ -1,0 +1,20 @@
+:project:
+  :which_ceedling: /home/user/Ceedling
+  :build_root: build
+  :release_build: true
+  :use_mocks: false
+:release_build:
+  :output: bin/app.out
+  :use_assembly: true
+  :artifacts:
+    - extras/a/notes.txt
+    - extras/b/notes.txt
+:paths:
+  :source:
+    - src/**
+    - ../shared
+  :include:
+    - src/**
+  :test: []
+:plugins:
+  :enabled: []

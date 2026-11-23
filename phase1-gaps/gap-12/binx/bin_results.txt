@@ -1,0 +1,54 @@
+=== A. a name found in the project file's directory (cwd proj)
+ + Merging project configuration mixin using /home/user/Ceedling/phase1-gaps/gap-12/binx/proj/cfg/by_name.yml
+ > Launching Ceedling from /home/user/Ceedling/
+ > Using: /home/user/Ceedling/phase1-gaps/gap-12/binx/proj/cfg/project.yml
+  - FROM_BY_NAME
+=== B. a mixin name holding a dot, my.extra.yml beside the project file (cwd proj)
+ > Using: /home/user/Ceedling/phase1-gaps/gap-12/binx/proj/cfg/project.yml
+🧨 EXCEPTION: Command line failed validation
+🪲 ERROR: Cannot find mixin at my.extra
+=== C. a filename that sits only in a :load_paths directory (cwd proj)
+ > Using: /home/user/Ceedling/phase1-gaps/gap-12/binx/proj/cfg/project_lp.yml
+🧨 EXCEPTION: Command line failed validation
+🪲 ERROR: Cannot find mixin at lp.yml
+=== D. the same mixin by name, :load_paths cfg/mixins, cwd proj (cwd proj)
+ + Merging command line mixin using cfg/mixins/lp.yml
+ + Merging project configuration mixin using /home/user/Ceedling/phase1-gaps/gap-12/binx/proj/cfg/by_name.yml
+ > Launching Ceedling from /home/user/Ceedling/
+ > Using: /home/user/Ceedling/phase1-gaps/gap-12/binx/proj/cfg/project_lp.yml
+  - FROM_LOAD_PATH
+  - FROM_BY_NAME
+=== D2. the same project and mixin name from the parent directory (cwd binx)
+ > Using: /home/user/Ceedling/phase1-gaps/gap-12/binx/proj/cfg/project_lp.yml
+🧨 EXCEPTION: Project configuration file section :mixins failed validation
+🪲 ERROR: Config :mixins ↳ :load_paths => 'cfg/mixins' does not exist as a directory in the filesystem
+=== A2. a name in the project file's directory from the parent directory (cwd binx)
+ + Merging project configuration mixin using /home/user/Ceedling/phase1-gaps/gap-12/binx/proj/cfg/by_name.yml
+ > Launching Ceedling from /home/user/Ceedling/
+ > Using: /home/user/Ceedling/phase1-gaps/gap-12/binx/proj/cfg/project.yml
+🧨 EXCEPTION: Ceedling configuration failed validation
+🪲 ERROR: Config path :paths ↳ :source => 'src' does not exist in the filesystem.
+  - FROM_BY_NAME
+=== E. one mixin file by two spellings, lnk -> . (cwd proj)
+ + Merging command line mixin using lnk/twice.yml
+ + Merging command line mixin using twice.yml
+ + Merging project configuration mixin using /home/user/Ceedling/phase1-gaps/gap-12/binx/proj/cfg/by_name.yml
+ > Launching Ceedling from /home/user/Ceedling/
+ > Using: /home/user/Ceedling/phase1-gaps/gap-12/binx/proj/cfg/project.yml
+  - FROM_TWICE
+  - FROM_TWICE
+  - FROM_BY_NAME
+=== F. --project through a directory literally named ~root (cwd proj)
+🧨 EXCEPTION: Could not find project filepath /root/project.yml from command line argument
+=== G. --logfile through a directory literally named ~root
+ > Launching Ceedling from /home/user/Ceedling/
+ > Logfile: /root/gap12.log
+   ls: ls: cannot access '~root/gap12.log': No such file or directory
+   ls: /root/gap12.log
+=== H. :which_ceedling ~root, where ./~root is a symlink to this checkout (cwd proj)
+ + Merging command line mixin using which_tilde.yml
+ + Merging project configuration mixin using /home/user/Ceedling/phase1-gaps/gap-12/binx/proj/cfg/by_name.yml
+ > Using: /home/user/Ceedling/phase1-gaps/gap-12/binx/proj/cfg/project.yml
+🧨 EXCEPTION: Configured Ceedling launch path ~root/ contains no Ceedling installation
+=== I. project-file discovery from a subdirectory of the project
+🧨 EXCEPTION: No project filepath provided and neither default ./project.yml nor ./ceedling.yml found

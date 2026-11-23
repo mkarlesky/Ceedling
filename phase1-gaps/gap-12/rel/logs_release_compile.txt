@@ -1,0 +1,46 @@
+=== release:compile:uart.c
+ > Launching Ceedling from /home/user/Ceedling/
+`gcc -I"src" -I"src/_t_" -I"src/drv" -I"src/other" -DGNU_COMPILER -c "src/drv/uart.c" -o "build/release/out/src/drv/uart.o" -MMD -MF "build/release/dependencies/src/drv/uart.d"`
+=== release:compile:drv/uart.c
+ > Launching Ceedling from /home/user/Ceedling/
+`gcc -I"src" -I"src/_t_" -I"src/drv" -I"src/other" -DGNU_COMPILER -c "src/drv/uart.c" -o "build/release/out/src/drv/uart.o" -MMD -MF "build/release/dependencies/src/drv/uart.d"`
+=== release:compile:src/drv/uart.c
+ > Launching Ceedling from /home/user/Ceedling/
+`gcc -I"src" -I"src/_t_" -I"src/drv" -I"src/other" -DGNU_COMPILER -c "src/drv/uart.c" -o "build/release/out/src/drv/uart.o" -MMD -MF "build/release/dependencies/src/drv/uart.d"`
+=== release:compile:./src/drv/uart.c
+ > Launching Ceedling from /home/user/Ceedling/
+`gcc -I"src" -I"src/_t_" -I"src/drv" -I"src/other" -DGNU_COMPILER -c "src/drv/uart.c" -o "build/release/out/src/drv/uart.o" -MMD -MF "build/release/dependencies/src/drv/uart.d"`
+=== release:compile:src\drv\uart.c
+ > Launching Ceedling from /home/user/Ceedling/
+`gcc -I"src" -I"src/_t_" -I"src/drv" -I"src/other" -DGNU_COMPILER -c "src/drv/uart.c" -o "build/release/out/src/drv/uart.o" -MMD -MF "build/release/dependencies/src/drv/uart.d"`
+=== release:compile:/home/user/Ceedling/phase1-gaps/gap-12/rel/proj/src/drv/uart.c
+ > Launching Ceedling from /home/user/Ceedling/
+`gcc -I"src" -I"src/_t_" -I"src/drv" -I"src/other" -DGNU_COMPILER -c "src/drv/uart.c" -o "build/release/out/src/drv/uart.o" -MMD -MF "build/release/dependencies/src/drv/uart.d"`
+=== release:compile:../proj/src/drv/uart.c
+ > Launching Ceedling from /home/user/Ceedling/
+🧨 EXCEPTION: Found no file `../proj/src/drv/uart.c` in search paths.
+🌱 Ceedling could not complete operations because of errors
+=== release:compile:rt.c
+ > Launching Ceedling from /home/user/Ceedling/
+🧨 EXCEPTION: Found no file `rt.c` in search paths.
+🌱 Ceedling could not complete operations because of errors
+=== release:compile:../shared/crc.c
+ > Launching Ceedling from /home/user/Ceedling/
+`gcc -I"src" -I"src/_t_" -I"src/drv" -I"src/other" -DGNU_COMPILER -c "../shared/crc.c" -o "build/release/out/_up_/shared/crc.o" -MMD -MF "build/release/dependencies/_up_/shared/crc.d"`
+=== release:compile:crc.c
+ > Launching Ceedling from /home/user/Ceedling/
+`gcc -I"src" -I"src/_t_" -I"src/drv" -I"src/other" -DGNU_COMPILER -c "../shared/crc.c" -o "build/release/out/_up_/shared/crc.o" -MMD -MF "build/release/dependencies/_up_/shared/crc.d"`
+=== release:compile:dup.c
+ > Launching Ceedling from /home/user/Ceedling/
+ℹ️ NOTICE: Multiple files matched 'dup.c' but chose 'src/drv/dup.c' by search-path priority. Other candidates: src/other/dup.c. Add more path to 'dup.c' at its point of reference to select a different file.
+`gcc -I"src" -I"src/_t_" -I"src/drv" -I"src/other" -DGNU_COMPILER -c "src/drv/dup.c" -o "build/release/out/src/drv/dup.o" -MMD -MF "build/release/dependencies/src/drv/dup.d"`
+=== release:compile:other/dup.c
+ > Launching Ceedling from /home/user/Ceedling/
+`gcc -I"src" -I"src/_t_" -I"src/drv" -I"src/other" -DGNU_COMPILER -c "src/other/dup.c" -o "build/release/out/src/other/dup.o" -MMD -MF "build/release/dependencies/src/other/dup.d"`
+=== release:compile:uart
+ > Launching Ceedling from /home/user/Ceedling/
+🧨 EXCEPTION: Unrecognized build task 'release:compile:uart'. List available build tasks with `ceedling help`.
+🌱 Ceedling could not complete operations because of errors
+=== release:assemble:start.s
+ > Launching Ceedling from /home/user/Ceedling/
+`as -I"src" -I"src/_t_" -I"src/drv" -I"src/other" "src/drv/start.s" -o "build/release/out/src/drv/start.o"`

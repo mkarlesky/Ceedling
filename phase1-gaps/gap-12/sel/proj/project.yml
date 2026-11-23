@@ -1,0 +1,17 @@
+:project:
+  :which_ceedling: /home/user/Ceedling
+  :build_root: build
+  :use_mocks: false
+:paths:
+  :source:
+    - src/**
+  :include:
+    - src/**
+  :test:
+    - test/**
+    - ../outside_tests
+:files:
+  :test:
+    - +:test_top.c
+:plugins:
+  :enabled: []

@@ -1,0 +1,15 @@
+# 1. release from a clean build with src/mylib/unity.c
+ > Launching Ceedling from /home/user/Ceedling/
+Compiling unity.c...
+# build/vendor/unity/src after it (empty listing follows):
+# 2. test:all with a test path added, which populates build/vendor
+ > Launching Ceedling from /home/user/Ceedling/
+🧨 EXCEPTION: Ambiguous file reference 'unity.c' found. Include more trailing path to distinguish among: build/vendor/unity/src/unity.c, src/mylib/unity.c
+# build/vendor/unity/src after it:
+meson.build
+unity.c
+unity.h
+unity_internals.h
+# 3. release again, source changed
+ > Launching Ceedling from /home/user/Ceedling/
+🧨 EXCEPTION: Ambiguous file reference 'unity.c' found. Include more trailing path to distinguish among: build/vendor/unity/src/unity.c, src/mylib/unity.c

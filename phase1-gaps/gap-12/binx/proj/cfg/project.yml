@@ -1,0 +1,13 @@
+:project:
+  :which_ceedling: /home/user/Ceedling
+  :build_root: build
+  :use_mocks: false
+:mixins:
+  :enabled:
+    - by_name
+:paths:
+  :source:
+    - src/**
+  :test: []
+:plugins:
+  :enabled: []

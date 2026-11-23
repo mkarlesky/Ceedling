@@ -1,0 +1,68 @@
+=== test:path[unit] --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;selected test_c.c;selected test_Unit_upper.c;selected test_a.c;selected test_b.c;
+=== test:path[test/unit] --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;selected test_Unit_upper.c;selected test_a.c;selected test_b.c;
+=== test:path[./test/unit] --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;🪲 ERROR: Found no tests including the given path or path component;
+=== test:path[test/unit/] --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;🪲 ERROR: Found no tests including the given path or path component;
+=== test:path[test\unit] --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;🪲 ERROR: Found no tests including the given path or path component;
+=== test:path[/home/user/Ceedling/phase1-gaps/gap-12/sel/proj/test/unit] --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;🪲 ERROR: Found no tests including the given path or path component;
+=== test:path[test_a] --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;🪲 ERROR: Found no tests including the given path or path component;
+=== test:path[test/unit/test_a] --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;🪲 ERROR: Found no tests including the given path or path component;
+=== test:path[..] --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;selected test_out.c;
+=== test:path[.] --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;selected test_out.c;selected test_top.c;
+=== test:path[Unit] --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;🪲 ERROR: Found no tests including the given path or path component;
+=== test:path[nit] --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;selected test_c.c;selected test_Unit_upper.c;selected test_a.c;selected test_b.c;
+=== test:pattern[test_a] --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;selected test_a.c;
+=== test:pattern[^test/] --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;selected test_c.c;selected test_Unit_upper.c;selected test_a.c;selected test_b.c;
+=== test:pattern[^./test/] --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;🪲 ERROR: Found no tests matching pattern /^./test//;
+=== test:pattern[\.c$] --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;selected test_c.c;selected test_Unit_upper.c;selected test_a.c;selected test_b.c;selected test_out.c;selected test_top.c;
+=== test:pattern[outside] --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;selected test_out.c;
+=== test:pattern[Unit] --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;selected test_Unit_upper.c;
+=== test:pattern --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;selected test_c.c;selected test_Unit_upper.c;selected test_a.c;selected test_b.c;selected test_out.c;selected test_top.c;
+=== test:path --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;🧨 EXCEPTION: undefined method `tr' for nil;
+=== test:pattern[] --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;selected test_c.c;selected test_Unit_upper.c;selected test_a.c;selected test_b.c;selected test_out.c;selected test_top.c;
+=== test:path[] --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;🧨 EXCEPTION: undefined method `tr' for nil;
+=== test:test_a.c --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;selected test_a.c;
+=== test:unit/test_a.c --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;selected test_a.c;
+=== test:./test/unit/test_a.c --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;selected test_a.c;
+=== test:../proj/test/unit/test_a.c --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;🧨 EXCEPTION: Found no file `../proj/test/unit/test_a.c` in search paths.;
+=== test:../outside_tests/test_out.c --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;selected test_out.c;
+=== test:test_out.c --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;selected test_out.c;
+=== test:/home/user/Ceedling/phase1-gaps/gap-12/sel/proj/test/unit/test_a.c --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;selected test_a.c;
+=== valgrind:path[unit] --mixin==plugins: {enabled: [valgrind]} --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;selected test_c.c;selected test_Unit_upper.c;selected test_a.c;selected test_b.c;
+=== valgrind:pattern --mixin==plugins: {enabled: [valgrind]} --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;🧨 EXCEPTION: no implicit conversion of nil into String;
+=== valgrind:path --mixin==plugins: {enabled: [valgrind]} --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;🧨 EXCEPTION: undefined method `tr' for nil;
+=== sanitize:pattern --mixin==plugins: {enabled: [sanitize]} --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;🧨 EXCEPTION: no implicit conversion of nil into String;
+=== sanitize:path[./test/unit] --mixin==plugins: {enabled: [sanitize]} --verbosity=obnoxious
+ > Launching Ceedling from /home/user/Ceedling/;🪲 ERROR: Found no tests including the given path or path component;

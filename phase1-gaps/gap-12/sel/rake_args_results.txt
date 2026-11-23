@@ -1,0 +1,13 @@
+Rake 13.2.1
+test:path[test\unit] => ["test:path", ["testunit"]]
+test:path[test\\unit] => ["test:path", ["test\\unit"]]
+test:pattern[\.c$] => ["test:pattern", [".c$"]]
+test:pattern[test_\a] => ["test:pattern", ["test_a"]]
+=== test:path[test\unit]
+ > Launching Ceedling from /home/user/Ceedling/;🪲 ERROR: Found no tests including the given path or path component;
+=== test:path[test\\unit]
+ > Launching Ceedling from /home/user/Ceedling/;Parsing test_Unit_upper.c for test case names...;Parsing test_a.c for test case names...;Parsing test_b.c for test case names...;
+=== test:pattern[\.c$]
+ > Launching Ceedling from /home/user/Ceedling/;Parsing test_c.c for test case names...;Parsing test_Unit_upper.c for test case names...;Parsing test_a.c for test case names...;Parsing test_b.c for test case names...;Parsing test_out.c for test case names...;Parsing test_top.c for test case names...;
+=== test:pattern[test_\a]
+ > Launching Ceedling from /home/user/Ceedling/;Parsing test_a.c for test case names...;
