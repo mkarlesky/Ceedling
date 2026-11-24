@@ -1,0 +1,32 @@
+{
+  "about": "Maps contract row IDs to the plan's issues and defect catalog entries. The repo holds row IDs only. Convention: ~/Downloads/paths-rearch-phase3a-plan.md, section 'The row format'. 'seed' names the catalog contract-row bullet a row copies (1-based). 'closed_by' is filled when a PR makes the row meet its target.",
+  "areas": {
+    "RES": "include resolution",
+    "MOCK": "mock naming and lookup",
+    "PART": "Partials",
+    "LINK": "the link set and header-to-source pairing",
+    "GEN": "generated-file identity and placement",
+    "ISO": "header isolation",
+    "DELTA": "delta builds",
+    "COV": "coverage plugins",
+    "ORC": "oracle self-checks"
+  },
+  "rows": [
+    { "id": "ISO-001",   "issues": [1414], "catalog": ["DC-032"], "seed": "DC-032 row 2", "status": "fails on Linux GCC 13 (tests): helper.h is not isolated, so the test calls the real inline foo_twice, 'Expected 7 Was 2'", "closed_by": null },
+    { "id": "DELTA-001", "issues": [1442], "catalog": ["DC-054"], "seed": "DC-054 row 1", "status": "passes on Linux (all), with build 2 rerunning stages 6, 7 and 8 and stage 4 pass 2 reading build 1's real mock_m1.h", "closed_by": null },
+    { "id": "DELTA-002", "issues": [1443], "catalog": ["DC-028"], "seed": "DC-028 row 1", "status": "fails build 2 on Linux in every variant (none, all; test updated, unchanged): the test compiles against the stale flat mock and fails to link", "closed_by": null },
+    { "id": "GEN-001",   "issues": [1444], "catalog": ["DC-041"], "seed": "DC-041 row 1", "status": "fails on Linux (none): 'Found no file test_x_runner.c' at Building Objects", "closed_by": null },
+    { "id": "MOCK-001",  "issues": [1446], "catalog": ["DC-025"], "seed": "DC-025 row 1", "status": "fails on Linux in every variant (none, tests; CMock, FFF): 'Found no file drivers/foox_sfx.h'", "closed_by": null },
+    { "id": "LINK-001",  "issues": [1447, 1446], "catalog": ["DC-023"], "seed": "DC-023 row 1", "status": "fails on Linux in every mode (none, tests, all): foox.c stays in the link beside the mock, 'multiple definition of foox_read'", "closed_by": null },
+    { "id": "DELTA-003", "issues": [1449], "catalog": ["DC-034"], "seed": "DC-034 row 1", "status": "passes on Linux (mocks), with build 2 skipping every stage although src/a/foo.h now shadows src/b/foo.h", "closed_by": null },
+    { "id": "PART-001",  "issues": [1459], "catalog": ["DC-009"], "seed": "DC-009 row 1", "status": "fails on Linux (all): no module header found under -I ., 'unknown type name sensor_val_t' in the Partial implementation header", "closed_by": null },
+    { "id": "PART-002",  "issues": [1460], "catalog": ["DC-011"], "seed": "DC-011 row 2", "status": "fails on Linux (all), the row's only platform: 'undefined reference to unix_pub'", "closed_by": null },
+    { "id": "PART-003",  "issues": [1463], "catalog": ["DC-012"], "seed": "DC-012 row 1", "status": "fails on Linux GCC 13 (all): 'redeclaration of enumerator B_OK' at ceedling_partial_b_types.h:6:16", "closed_by": null },
+    { "id": "RES-001",   "issues": [1464], "catalog": ["DC-001"], "seed": "DC-001 row 2", "status": "fails on Linux (tests): Ceedling pairs src/sub/config.h and links src/sub/config.c, 'undefined reference to config_get'", "closed_by": null },
+    { "id": "PART-004",  "issues": [1465], "catalog": ["DC-013"], "seed": "DC-013 row 1", "status": "fails on Linux in both orders (all): 'unknown type name log_op_t' at ceedling_partial_lock_interface.h:6:15", "closed_by": null },
+    { "id": "PART-005",  "issues": [1463], "catalog": ["DC-012"], "seed": "DC-012 row 1, tagged type under -std=c17 (investigation 5.3, special case 1)", "status": "fails on Linux GCC 13 (all): 'redeclaration of enum b_status' at ceedling_partial_b_types.h:6:14", "closed_by": null },
+    { "id": "COV-001",   "issues": [], "catalog": [], "seed": "GAP-13 (GAP13-05): two same-named untested sources under gcov and Bullseye (special case 2)", "status": "passes on Linux under gcov, objects placed apart at build/gcov/out/src/a/util.o and src/b/util.o; Bullseye leg skipped here, unrecorded", "closed_by": null },
+    { "id": "ORC-001",    "issues": [1414], "catalog": ["DC-032"], "seed": "GAP3-01, GAP3-20, GAP14-01: -I . spelling in .d and markers (special case 3)", "status": "passes on Linux (tests): .d spells src/drivers/bar.h, markers ./src/drivers/bar.h, equal once normalized", "closed_by": null },
+    { "id": "ORC-002",    "issues": [], "catalog": ["DC-032", "DC-092"], "seed": "GAP14-02, GAP14-12: Windows separator normalization (special case 4)", "status": "unrecorded: Windows only; its normalizer fixtures pass on Linux", "closed_by": null }
+  ]
+}
